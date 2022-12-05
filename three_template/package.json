@@ -1,0 +1,11 @@
+{
+  
+  "dependencies": {
+    "cannon-es": "^0.20.0",
+    "gsap": "^3.11.3",
+    "install": "^0.13.0",
+    "three": "^0.147.0",
+    "three-orbitcontrols": "^2.110.3",
+    "yuka": "^0.7.8"
+  }
+}

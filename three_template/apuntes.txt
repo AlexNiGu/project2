@@ -1,0 +1,5 @@
+npm i install parcel -g
+
+npm install three
+
+parcel ./src/index.html
