@@ -4,7 +4,7 @@ import * as THREE from "three";
 
 
 var myAppControl = new AppController();
-var cursor = new Cursor();
+new Cursor();
 
 function animate() {
     myAppControl.draw();

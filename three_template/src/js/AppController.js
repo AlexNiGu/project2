@@ -107,14 +107,16 @@ export class AppController {
             setTimeout(() => {
               this.view = this.#viewUI.render("draw");
               this.#viewUI.drawLogic("draw", this.duck);
-            }, 1500);
 
-            // FETCH ======
+              // FETCH ======
               //document.getElementbyID('download).addEvenetListener('click, ())=> {
               // this.Fetch.fetchDraw();
               //}
 
             //=======================
+            }, 1500);
+
+
             document.querySelector(".menu").style.display = "none";
             break;
           case "conversationUI":
