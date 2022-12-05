@@ -94,7 +94,7 @@ export class AppController {
     });
   }
 
-  renderUI() {
+  async renderUI() {
     if (this.renderUIActivate) {
       // Is an infinte loop. And we can't have an infinite loop
       if (this.duck) {
@@ -104,19 +104,17 @@ export class AppController {
             this.#ducktor.playAnimationDraw(this.duck);
             this.cameraAnimation.playAnimationDraw();
 
-            setTimeout(() => {
+            setTimeout(async () => {
               this.view = this.#viewUI.render("draw");
               this.#viewUI.drawLogic("draw", this.duck);
-
-              // FETCH ======
-              //document.getElementbyID('download).addEvenetListener('click, ())=> {
-              // this.Fetch.fetchDraw();
-              //}
-
-            //=======================
             }, 1500);
 
+            // FETCH ======
+              //document.getElementbyID('download).addEvenetListener('click, ())=> {
+              // this.Fetch.fetchDraw();
+            //}
 
+            //=======================
             document.querySelector(".menu").style.display = "none";
             break;
           case "conversationUI":
@@ -126,14 +124,26 @@ export class AppController {
             this.cameraAnimation.playAnimationConversation();
             document.querySelector(".menu").style.display = "none";
 
+            /**TE PONGO EL FETCH AQUI DE TEST*/
+            await this.fetch.fetchGetConversation()
+
+            console.log(this.fetch.test)
+
             break;
           case "shopUI":
             this.#ducktor.playAnimationShop();
             this.cameraAnimation.playAnimationShop();
 
-            setTimeout(() => {
+            setTimeout(async () => {
               this.view = this.#viewUI.render("shop");
               this.#viewUI.drawLogic("shop", this.duck);
+
+              await this.fetch.getFurnitures()
+              await this.fetch.getPersonalPaints()
+              
+              console.log(this.fetch.shopFornitures)
+              console.log(this.fetch.personalPaints)
+
             }, 1500);
 
             document.querySelector(".menu").style.display = "none";
