@@ -38,7 +38,7 @@ export class ViewUI {
                                 <label for="lineWidth">Line Width</label>
                                 <input id="lineWidth" name='lineWidth' type="number" value="5">
                                 <button id="clear">Clear</button>
-                                <button id="btndownload">Download</button>
+                                <button id="save-panting">He acabado!</button>
                             </div>
                             <div class="canvas-container">
                                 <canvas id="canvas" class="canvas"></canvas>

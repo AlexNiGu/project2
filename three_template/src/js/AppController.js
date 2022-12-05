@@ -94,7 +94,7 @@ export class AppController {
     });
   }
 
-  renderUI() {
+  async renderUI() {
     if (this.renderUIActivate) {
       // Is an infinte loop. And we can't have an infinite loop
       if (this.duck) {
@@ -104,17 +104,38 @@ export class AppController {
             this.#ducktor.playAnimationDraw(this.duck);
             this.cameraAnimation.playAnimationDraw();
 
-            setTimeout(() => {
+            setTimeout(async () => {
               this.view = this.#viewUI.render("draw");
               this.#viewUI.drawLogic("draw", this.duck);
+
+              /**FETCH PARA SABER QUE DIBUJO ES */
+              await this.fetch.fetchGetPaiting()
+              console.log(this.fetch.paint)
+              /**LISTENER PARA SUBIR EL DIBUJO */
+              document.getElementById('save-panting').addEventListener('click', async ()=>{
+
+                /** preparamos la imagen en binario*/
+                const img = new Image(1000, 1000);
+                const canvasIMG = canvas.toDataURL('image/png', 1.0);
+                img.src = canvasIMG;
+
+                /**creamos un formdata para almacenar los datos a enviar */
+                const user = JSON.parse(localStorage.getItem('user'))
+                const formData = new FormData()
+                formData.append('IdDibujo', this.fetch.paint[0].IdDibujo)
+                formData.append('NombreDibujo',this.fetch.paint[0].Tipo)
+                formData.append('IdUser',user.IdUser)
+                formData.append('MyFile',img.src)
+
+                /**Fetch para enviar el dibujo al servidor */
+
+                await this.fetch.fetchSavePainting(formData)
+            
+              })
+
+              
             }, 1500);
 
-            // FETCH ======
-              //document.getElementbyID('download).addEvenetListener('click, ())=> {
-              // this.Fetch.fetchDraw();
-              //}
-
-            //=======================
             document.querySelector(".menu").style.display = "none";
             break;
           case "conversationUI":
@@ -124,14 +145,26 @@ export class AppController {
             this.cameraAnimation.playAnimationConversation();
             document.querySelector(".menu").style.display = "none";
 
+            /**TE PONGO EL FETCH AQUI DE TEST*/
+            await this.fetch.fetchGetConversation()
+
+            console.log(this.fetch.test)
+
             break;
           case "shopUI":
             this.#ducktor.playAnimationShop();
             this.cameraAnimation.playAnimationShop();
 
-            setTimeout(() => {
+            setTimeout(async () => {
               this.view = this.#viewUI.render("shop");
               this.#viewUI.drawLogic("shop", this.duck);
+
+              await this.fetch.getFurnitures()
+              await this.fetch.getPersonalPaints()
+              
+              console.log(this.fetch.shopFornitures)
+              console.log(this.fetch.personalPaints)
+
             }, 1500);
 
             document.querySelector(".menu").style.display = "none";
