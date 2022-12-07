@@ -19,7 +19,7 @@ export class Enviorment {
     );
     this.camera.rotation.set(-0.356, 0, 0);
     this.camera.position.set(27, 25, 32);
-    console.log(this.camera);
+    // console.log(this.camera);
 
     // Render the scece in the element that you want. In our case is a canvas
     this.renderer = new THREE.WebGLRenderer({

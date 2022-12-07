@@ -9,15 +9,18 @@ export class Fetch {
         this.personalPaints = {}
         this.test = {}
         this.shopFornitures = {}
+
+        this.user = JSON.parse(localStorage.getItem('user'))
+
     }
 
     async fetchGetPaiting(){
 
-        console.log('hola has entrado en painting')
-        const idPaint = await JSON.parse(localStorage.getItem('user'))
+        // console.log('hola has entrado en painting')
+        
 
         var cuerpo = {
-            IdDibujo:idPaint.Numdibujos
+            IdDibujo:this.user.Numdibujos
         }
 
         var options = {
@@ -47,10 +50,10 @@ export class Fetch {
 
     async fetchGetConversation(){
 
-        const idTest = await JSON.parse(localStorage.getItem('user'))
+        
 
         var cuerpo = {
-            IdTest:idTest.Numtest
+            IdTest:this.user.Numtest
         }
         var options = {
             method:'post',
@@ -66,18 +69,8 @@ export class Fetch {
 
     async responseConversation(cuerpo){
 
-        const u = await JSON.parse(localStorage.getItem('user'))
-
         /**ESTE CUERPO TIENE QUE LLEGAR POR PARAMETRO PERO TE DEJO LA PLANTILLA DE COMO TIENE QUE QUEDAR PARA SER ENVIADO */
-        var cuerpo = {
-            IdUser:u.IdUser,
-            IdTest:u.Numtest+1,
-            Respuesta1:'la respuesta que sea en INTEGER',
-            Respuesta2:'la respuesta que sea en INTEGER',
-            Respuesta3:'la respuesta que sea en INTEGER',
-            Respuesta4:'la respuesta que sea en INTEGER',
-            Respuesta5:'la respuesta que sea en INTEGER'
-        }
+       
 
         var options = {
             method:'post',

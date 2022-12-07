@@ -10,7 +10,7 @@ export function onMouseMove(event) {
     // this.mouse = new THREE.Vector2();
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-    // console.log(mouse.x, mouse.y);
+    // // console.log(mouse.x, mouse.y);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -23,15 +23,15 @@ export function hoverPiece(pScene, pCamera) {
 
     for (let i = 0; i < intersect.length; i++) {
         intersect[i].object.material.transparent = true;
-        // console.log(this.mouse, this.camera);
+        // // console.log(this.mouse, this.camera);
         // intersect[i].object.material.color.set(0x00ff00);
         intersect[i].object.material.opacity = 0.1;
-        // console.log("Hover");
+        // // console.log("Hover");
 
 
     }
-    // console.log(intersect);
-    // console.log(pScene);
+    // // console.log(intersect);
+    // // console.log(pScene);
 }
 
 export function resetHover(pScene) {
@@ -59,7 +59,7 @@ export function onClick(pCamera, pScene) {
         intersect[i].object.material.color.set(0x00ff00);
         // intersect[i].object.rotation.x -= 3;
     }
-    // console.log("Click");
+    // // console.log("Click");
 
 }
 

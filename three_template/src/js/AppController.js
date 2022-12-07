@@ -100,7 +100,7 @@ export class AppController {
       if (this.duck) {
         switch (this.sectionUI) {
           case "drawUI":
-            console.log("draw");
+            // console.log("draw");
             this.#ducktor.playAnimationDraw(this.duck);
             this.cameraAnimation.playAnimationDraw();
 
@@ -110,7 +110,7 @@ export class AppController {
 
               /**FETCH PARA SABER QUE DIBUJO ES */
               await this.fetch.fetchGetPaiting()
-              console.log(this.fetch.paint)
+              // console.log(this.fetch.paint)
               /**LISTENER PARA SUBIR EL DIBUJO */
               document.getElementById('save-panting').addEventListener('click', async ()=>{
 
@@ -139,16 +139,45 @@ export class AppController {
             document.querySelector(".menu").style.display = "none";
             break;
           case "conversationUI":
-            console.log("conversation");
+         
+            var cuerpo = {
+              IdUser:this.fetch.user.IdUser,
+              IdTest:"this.fetch.test.IdTest",
+              Respuesta1:'',
+              Respuesta2:'la respuesta que sea en INTEGER',
+              Respuesta3:'la respuesta que sea en INTEGER',
+              Respuesta4:'la respuesta que sea en INTEGER',
+              Respuesta5:'la respuesta que sea en INTEGER'
+          }
 
             this.#ducktor.playAnimationConversation();
             this.cameraAnimation.playAnimationConversation();
             document.querySelector(".menu").style.display = "none";
 
-            /**TE PONGO EL FETCH AQUI DE TEST*/
-            await this.fetch.fetchGetConversation()
+            setTimeout(async ()=> {
+              await this.fetch.fetchGetConversation();
 
-            console.log(this.fetch.test)
+              cuerpo.IdTest = this.fetch.test[0].IdTest
+              // console.log(this.fetch.test)
+              this.#viewUI.render("conversation");
+              var i = 0
+              this.drawLogic(i)
+
+              document.querySelector(".answer").addEventListener('click',(e)=>{
+                i ++
+                if(i<=5){
+                  // console.log(i)
+                  cuerpo[`Respuesta${i}`]=parseInt(e.target.dataset.indexNumber)
+                  this.drawLogic(i)
+                }
+                if(i == 5){
+                  this.fetch.responseConversation(cuerpo)
+                }
+              })
+            },1500);
+            /**TE PONGO EL FETCH AQUI DE TEST*/
+
+            
 
             break;
           case "shopUI":
@@ -162,8 +191,8 @@ export class AppController {
               await this.fetch.getFurnitures()
               await this.fetch.getPersonalPaints()
               
-              console.log(this.fetch.shopFornitures)
-              console.log(this.fetch.personalPaints)
+              // console.log(this.fetch.shopFornitures)
+              // console.log(this.fetch.personalPaints)
 
             }, 1500);
 
@@ -171,7 +200,7 @@ export class AppController {
 
             break;
           case "gameUI":
-            console.log("game");
+            // console.log("game");
             this.#ducktor.playAnimationGame();
             this.cameraAnimation.playAnimationConversation();
             document.querySelector(".menu").style.display = "none";
@@ -187,6 +216,9 @@ export class AppController {
     // this.listener.bind(this);
   }
 
+  drawLogic(i){
+    this.#viewUI.drawLogic("conversation","", this.fetch.test[i], false);
+  }
   listener2() {
     window.addEventListener("resize", () => {
       this.#camera.aspect = window.innerWidth / window.innerHeight;
@@ -227,13 +259,13 @@ export class AppController {
           this.mixer = mixer;
           this.#ducktor.playAnimationDefault(this.duck);
         }
-        // console.log("d", elem);
+        // // console.log("d", elem);
       },
       function (xhr) {
-        console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        // console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
       },
       function (error) {
-        console.log("An error happened");
+        // console.log("An error happened");
       }
     );
   }

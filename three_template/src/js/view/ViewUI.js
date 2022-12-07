@@ -49,11 +49,13 @@ export class ViewUI {
         break;
 
       case "conversation":
+
+        
         myView = `    
         <div class="conversation">
           <div class="question center">
                 <div class="absolute">
-                    <h1 class="anim text text-question">Preguntas</h1>
+                    <h1 class="anim text text-question"></h1>
                 </div>
                 <svg width="540" height="190" viewBox="0 0 1080 385" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd" d="M1029.63 67C838 -18.4557 226.358 -11.5033 77.1608 67C42.9651 84.9922 -40.5308 59.4995 23.4701 224.499C18.9692 285.999 24.4757 370.42 77.1608 366.636C633.594 326.677 717.332 423.412 1029.63 366.636C1079.66 357.538 1092.91 267.999 1065.91 213.999C1085.91 137.999 1061.5 81.2145 1029.63 67Z" fill="#FFFDF1"/>
@@ -63,10 +65,6 @@ export class ViewUI {
             </div>
             <div class="text">
                 <ul class="answer">
-                    <li>Respuesta 1</li>
-                    <li>Respuesta 1</li>
-                    <li>Respuesta 1</li>
-                    <li>Respuesta 1</li>
                 </ul>
             </div>
         </div>`;
@@ -183,7 +181,32 @@ export class ViewUI {
     this.UIroot.innerHTML += myView;
   }
 
-  drawLogic(logicExpresion, duck) {
+
+  appenData(data) {
+    /*
+      0: Object { IdPregunta: "1", IdTest: "1", type_test: "autoestima", … }
+      ​​
+      IdPregunta: "1"
+      ​​
+      IdTest: "1"
+      ​​
+      pregunta: "Cuando te levantas por la mañana que es lo que mas quieres hacer??"
+      ​​
+      respuesta1: "Volver a dormir!"
+      ​​
+      respuesta2: "Ver a mi mamá o a mi papá!"
+      ​​
+      respuesta3: "Jugar a algo!"
+      ​​
+      respuesta4: ""
+      ​​
+      type_test: "autoestima"
+    */
+
+
+  }
+
+  drawLogic(logicExpresion, duck='', data='', bol=false) {
     switch (logicExpresion) {
       case "draw":
         var draw = document.querySelector(".draw");
@@ -279,39 +302,65 @@ export class ViewUI {
         });
         break;
       case 'conversation':
-        const text = document.querySelector('.anim');
-        const strText = text.textContent; // it's the value of the h1 text element
-        console.log(strText);
 
-        // To do a good animation what we can do is split the string into an array
-        const splitText = strText.split("");
-        console.log(splitText);
-        text.textContent = "";
+      if (!bol) {
+        // console.log(data)
+        document.querySelector('.text-question').innerHTML = data.pregunta;
+        document.querySelector('.answer').innerHTML=''
+        var i = 1
+        Object.entries(data).forEach(([key, value]) => {
 
-        for (let i=0; i < splitText.length; ++i) {
+          if (key == `respuesta${i}` && value != '') {
+            // console.log(key +  "=>", value)
+            let myLi = document.createElement('li');
+            myLi.setAttribute('data-index-number', i)
+             myLi.innerText = value;
+             document.querySelector('.answer').appendChild(myLi);
+            i++
+           
+          }
+          // console.log(i)
+        });
+    
+        bol = true;
+      }
 
-            splitText[i] == " " ? text.innerHTML += "<span>" + '&nbsp;' + "<pan>":         text.innerHTML += "<span>" + splitText[i] + "<pan>";
 
-        }
 
-        let char = 0;
-        let timer = setInterval(onTick, 50);
+      ////////////////////////////////////////////////////////////////////////////////////
+    //     const text = document.querySelector('.anim');
+    //     const strText = text.textContent; // it's the value of the h1 text element
+    //     // console.log(strText);
 
-        function onTick() {
-            const span = text.querySelectorAll('span')[char];
-            span.classList.add('fade');
-            char++;
-            if (char === splitText.length) {
-                complete();
-                return;
-            }
-        }
+    //     // To do a good animation what we can do is split the string into an array
+    //     const splitText = strText.split("");
+    //     // console.log(splitText);
+    //     text.textContent = "";
 
-        function complete() {
-            clearInterval(timer);
-            timer = null;
-        }
-        break;
+    //     for (let i=0; i < splitText.length; ++i) {
+
+    //         splitText[i] == " " ? text.innerHTML += "<span>" + '&nbsp;' + "<pan>":         text.innerHTML += "<span>" + splitText[i] + "<pan>";
+
+    //     }
+
+    //     let char = 0;
+    //     let timer = setInterval(onTick, 50);
+
+    //     function onTick() {
+    //         const span = text.querySelectorAll('span')[char];
+    //         span.classList.add('fade');
+    //         char++;
+    //         if (char === splitText.length) {
+    //             complete();
+    //             return;
+    //         }
+    //     }
+
+    //     function complete() {
+    //         clearInterval(timer);
+    //         timer = null;
+    //     }
+    //     break;
     }
 
   }

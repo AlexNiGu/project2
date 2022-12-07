@@ -9,8 +9,8 @@ new Cursor()
 const container = document.getElementById('container')
 
 // yes
-// localStorage.getItem('token') == ''? renderCanvas(): startLogin()
-renderCanvas();
+localStorage.getItem('token') == 'yes'? renderCanvas(): startLogin()
+// renderCanvas();
 /**LOGIN */
 
 function startLogin() {
