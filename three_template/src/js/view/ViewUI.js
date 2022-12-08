@@ -49,8 +49,6 @@ export class ViewUI {
         break;
 
       case "conversation":
-
-        
         myView = `    
         <div class="conversation">
           <div class="question center">
@@ -70,7 +68,7 @@ export class ViewUI {
         </div>`;
 
         this.logicExpresion = 'conversation';
-      break;
+        break;
 
       case "play":
         myView = ``;
@@ -79,7 +77,6 @@ export class ViewUI {
 
       case "shop":
         var image = new Image();
-        image.src = require("../../assets/img/Rectangle.png"); // necesari in parcel
         myView = `
                     <div class="shop">
                         <header class="flex">
@@ -95,63 +92,8 @@ export class ViewUI {
 
                         </header>
                         <main>
-                            <ul class="grid">
-                                <li class="product">
-                                    <div class="container-prod">
-                                        <div class="center"><img src="${image.src}" alt="product img" class="center"></div>
-                                        <div class="center"><h3 class="center price">230 peces</h3></div>
-                                    </div>
-                                    <p class="title-product">Rocket</p>
-                                </li>
-                                <li class="product">
-                                    <div class="container-prod">
-                                        <div class="center"><img src="${image.src}" alt="product img" class="center"></div>
-                                        <div class="center"><h3 class="center price">230 peces</h3></div>
-                                    </div>
-                                    <p class="title-product">Rocket</p>
-                                </li>
-                                <li class="product">
-                                    <div class="container-prod">
-                                        <div class="center"><img src="${image.src}" alt="product img" class="center"></div>
-                                        <div class="center"><h3 class="center price">230 peces</h3></div>
-                                    </div>
-                                    <p class="title-product">Rocket</p>
-                                </li>
-                                <li class="product">
-                                    <div class="container-prod">
-                                        <div class="center"><img src="${image.src}" alt="product img" class="center"></div>
-                                        <div class="center"><h3 class="center price">230 peces</h3></div>
-                                    </div>
-                                    <p class="title-product">Rocket</p>
-                                </li>
-                                <li class="product">
-                                    <div class="container-prod">
-                                        <div class="center"><img src="${image.src}" alt="product img" class="center"></div>
-                                        <div class="center"><h3 class="center price">230 peces</h3></div>
-                                    </div>
-                                    <p class="title-product">Rocket</p>
-                                </li>
-                                <li class="product">
-                                    <div class="container-prod">
-                                        <div class="center"><img src="${image.src}" alt="product img" class="center"></div>
-                                        <div class="center"><h3 class="center price">230 peces</h3></div>
-                                    </div>
-                                    <p class="title-product">Rocket</p>
-                                </li>
-                                <li class="product">
-                                    <div class="container-prod">
-                                        <div class="center"><img src="${image.src}" alt="product img" class="center"></div>
-                                        <div class="center"><h3 class="center price">230 peces</h3></div>
-                                    </div>
-                                    <p class="title-product">Rocket</p>
-                                </li>
-                                <li class="product">
-                                    <div class="container-prod">
-                                        <div class="center"><img src="${image.src}" alt="product img" class="center"></div>
-                                        <div class="center"><h3 class="center price">230 peces</h3></div>
-                                    </div>
-                                    <p class="title-product">Rocket</p>
-                                </li>
+                            <ul class="grid-shop">
+                            
                             </ul>
                         </main>
                     </div>`;
@@ -182,31 +124,7 @@ export class ViewUI {
   }
 
 
-  appenData(data) {
-    /*
-      0: Object { IdPregunta: "1", IdTest: "1", type_test: "autoestima", … }
-      ​​
-      IdPregunta: "1"
-      ​​
-      IdTest: "1"
-      ​​
-      pregunta: "Cuando te levantas por la mañana que es lo que mas quieres hacer??"
-      ​​
-      respuesta1: "Volver a dormir!"
-      ​​
-      respuesta2: "Ver a mi mamá o a mi papá!"
-      ​​
-      respuesta3: "Jugar a algo!"
-      ​​
-      respuesta4: ""
-      ​​
-      type_test: "autoestima"
-    */
-
-
-  }
-
-  drawLogic(logicExpresion, duck='', data='', bol=false) {
+  drawLogic(logicExpresion, duck = '', data = '', bol = false) {
     switch (logicExpresion) {
       case "draw":
         var draw = document.querySelector(".draw");
@@ -283,6 +201,10 @@ export class ViewUI {
         });
         break;
       case "shop":
+        if (!bol) {
+          this.appendReward(data)
+          bol = true
+        }
         var shop = document.querySelector(".shop");
         var menu = document.querySelector(".menu");
         menu.style.opacity = 0;
@@ -303,65 +225,79 @@ export class ViewUI {
         break;
       case 'conversation':
 
-      if (!bol) {
-        // console.log(data)
-        document.querySelector('.text-question').innerHTML = data.pregunta;
-        document.querySelector('.answer').innerHTML=''
-        var i = 1
-        Object.entries(data).forEach(([key, value]) => {
+        if (!bol) {
+          // console.log(data)
+          document.querySelector('.text-question').innerHTML = data.pregunta;
+          document.querySelector('.answer').innerHTML = ''
+          var i = 1
+          Object.entries(data).forEach(([key, value]) => {
 
-          if (key == `respuesta${i}` && value != '') {
-            // console.log(key +  "=>", value)
-            let myLi = document.createElement('li');
-            myLi.setAttribute('data-index-number', i)
-             myLi.innerText = value;
-             document.querySelector('.answer').appendChild(myLi);
-            i++
-           
-          }
-          // console.log(i)
-        });
-    
-        bol = true;
-      }
+            if (key == `respuesta${i}` && value != '') {
+              let myLi = document.createElement('li');
+              myLi.setAttribute('data-index-number', i)
+              myLi.innerText = value;
+              document.querySelector('.answer').appendChild(myLi);
+              i++
+            }
+            // console.log(i)
+          });
+
+          bol = true;
+        }
 
 
 
       ////////////////////////////////////////////////////////////////////////////////////
-    //     const text = document.querySelector('.anim');
-    //     const strText = text.textContent; // it's the value of the h1 text element
-    //     // console.log(strText);
+      //     const text = document.querySelector('.anim');
+      //     const strText = text.textContent; // it's the value of the h1 text element
+      //     // console.log(strText);
 
-    //     // To do a good animation what we can do is split the string into an array
-    //     const splitText = strText.split("");
-    //     // console.log(splitText);
-    //     text.textContent = "";
+      //     // To do a good animation what we can do is split the string into an array
+      //     const splitText = strText.split("");
+      //     // console.log(splitText);
+      //     text.textContent = "";
 
-    //     for (let i=0; i < splitText.length; ++i) {
+      //     for (let i=0; i < splitText.length; ++i) {
 
-    //         splitText[i] == " " ? text.innerHTML += "<span>" + '&nbsp;' + "<pan>":         text.innerHTML += "<span>" + splitText[i] + "<pan>";
+      //         splitText[i] == " " ? text.innerHTML += "<span>" + '&nbsp;' + "<pan>":         text.innerHTML += "<span>" + splitText[i] + "<pan>";
 
-    //     }
+      //     }
 
-    //     let char = 0;
-    //     let timer = setInterval(onTick, 50);
+      //     let char = 0;
+      //     let timer = setInterval(onTick, 50);
 
-    //     function onTick() {
-    //         const span = text.querySelectorAll('span')[char];
-    //         span.classList.add('fade');
-    //         char++;
-    //         if (char === splitText.length) {
-    //             complete();
-    //             return;
-    //         }
-    //     }
+      //     function onTick() {
+      //         const span = text.querySelectorAll('span')[char];
+      //         span.classList.add('fade');
+      //         char++;
+      //         if (char === splitText.length) {
+      //             complete();
+      //             return;
+      //         }
+      //     }
 
-    //     function complete() {
-    //         clearInterval(timer);
-    //         timer = null;
-    //     }
-    //     break;
+      //     function complete() {
+      //         clearInterval(timer);
+      //         timer = null;
+      //     }
+      //     break;
     }
 
   }
+
+  appendReward(data) {
+    for (let i = 0; i < data.length; i++) {
+      document.querySelector('.grid-shop').innerHTML +=
+        `<li class="product" data-index-number="${i}">
+            <div class="container-prod">
+                <div class="center"><img src="${data[i].Url}" alt="product img" class="center"></div>
+                <div class="center"><h3 class="center price">${data[i].Price}</h3></div>
+            </div>
+            <p class="title-product">${data[i].Name}</p>
+         </li>`
+    }
+  }
 }
+
+
+

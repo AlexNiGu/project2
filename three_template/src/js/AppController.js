@@ -34,7 +34,7 @@ export class AppController {
 
   clock;
   mixer;
-  
+
   fetch;
 
   constructor() {
@@ -49,10 +49,17 @@ export class AppController {
     this.#viewUI = new ViewUI(this.#camera);
     this.cameraAnimation = new CameraAnimation(this.#camera);
 
+    this.arrayRewards = []
+    
+    JSON.parse(localStorage.getItem('rewards')) != null? this.arrayRewards= JSON.parse(localStorage.getItem('rewards')):''
+
     this.clock = new THREE.Clock();
 
     this.loadElements(this.#myEnviorment.getHouse());
     this.loadElements(this.#ducktor.getDucktor(), 26, 1.5, -1, true);
+
+
+    this.user = JSON.parse(localStorage.getItem('user'))
   }
 
   draw() {
@@ -112,7 +119,7 @@ export class AppController {
               await this.fetch.fetchGetPaiting()
               // console.log(this.fetch.paint)
               /**LISTENER PARA SUBIR EL DIBUJO */
-              document.getElementById('save-panting').addEventListener('click', async ()=>{
+              document.getElementById('save-panting').addEventListener('click', async () => {
 
                 /** preparamos la imagen en binario*/
                 const img = new Image(1000, 1000);
@@ -123,38 +130,38 @@ export class AppController {
                 const user = JSON.parse(localStorage.getItem('user'))
                 const formData = new FormData()
                 formData.append('IdDibujo', this.fetch.paint[0].IdDibujo)
-                formData.append('NombreDibujo',this.fetch.paint[0].Tipo)
-                formData.append('IdUser',user.IdUser)
-                formData.append('MyFile',img.src)
+                formData.append('NombreDibujo', this.fetch.paint[0].Tipo)
+                formData.append('IdUser', user.IdUser)
+                formData.append('MyFile', img.src)
 
                 /**Fetch para enviar el dibujo al servidor */
 
                 await this.fetch.fetchSavePainting(formData)
-            
+
               })
 
-              
+
             }, 1500);
 
             document.querySelector(".menu").style.display = "none";
             break;
           case "conversationUI":
-         
+
             var cuerpo = {
-              IdUser:this.fetch.user.IdUser,
-              IdTest:"this.fetch.test.IdTest",
-              Respuesta1:'',
-              Respuesta2:'la respuesta que sea en INTEGER',
-              Respuesta3:'la respuesta que sea en INTEGER',
-              Respuesta4:'la respuesta que sea en INTEGER',
-              Respuesta5:'la respuesta que sea en INTEGER'
-          }
+              IdUser: this.fetch.user.IdUser,
+              IdTest: "this.fetch.test.IdTest",
+              Respuesta1: '',
+              Respuesta2: 'la respuesta que sea en INTEGER',
+              Respuesta3: 'la respuesta que sea en INTEGER',
+              Respuesta4: 'la respuesta que sea en INTEGER',
+              Respuesta5: 'la respuesta que sea en INTEGER'
+            }
 
             this.#ducktor.playAnimationConversation();
             this.cameraAnimation.playAnimationConversation();
             document.querySelector(".menu").style.display = "none";
 
-            setTimeout(async ()=> {
+            setTimeout(async () => {
               await this.fetch.fetchGetConversation();
 
               cuerpo.IdTest = this.fetch.test[0].IdTest
@@ -163,21 +170,18 @@ export class AppController {
               var i = 0
               this.drawLogic(i)
 
-              document.querySelector(".answer").addEventListener('click',(e)=>{
-                i ++
-                if(i<=5){
+              document.querySelector(".answer").addEventListener('click', (e) => {
+                i++
+                if (i <= 5) {
                   // console.log(i)
-                  cuerpo[`Respuesta${i}`]=parseInt(e.target.dataset.indexNumber)
+                  cuerpo[`Respuesta${i}`] = parseInt(e.target.dataset.indexNumber)
                   this.drawLogic(i)
                 }
-                if(i == 5){
+                if (i == 5) {
                   this.fetch.responseConversation(cuerpo)
                 }
               })
-            },1500);
-            /**TE PONGO EL FETCH AQUI DE TEST*/
-
-            
+            }, 1500);
 
             break;
           case "shopUI":
@@ -185,14 +189,13 @@ export class AppController {
             this.cameraAnimation.playAnimationShop();
 
             setTimeout(async () => {
-              this.view = this.#viewUI.render("shop");
-              this.#viewUI.drawLogic("shop", this.duck);
-
               await this.fetch.getFurnitures()
               await this.fetch.getPersonalPaints()
-              
-              // console.log(this.fetch.shopFornitures)
-              // console.log(this.fetch.personalPaints)
+
+              this.view = this.#viewUI.render("shop");
+              this.#viewUI.drawLogic("shop", this.duck, this.fetch.shopFornitures, false);
+
+              this.listenerShop()
 
             }, 1500);
 
@@ -216,8 +219,8 @@ export class AppController {
     // this.listener.bind(this);
   }
 
-  drawLogic(i){
-    this.#viewUI.drawLogic("conversation","", this.fetch.test[i], false);
+  drawLogic(i) {
+    this.#viewUI.drawLogic("conversation", "", this.fetch.test[i], false);
   }
   listener2() {
     window.addEventListener("resize", () => {
@@ -241,8 +244,10 @@ export class AppController {
       element,
       (glb) => {
         this.houseEnviorment = glb.scene.children[1]; // Array of two (object and mesh). You need to get the mesh
+        this.houseEnviorment = glb.scene;
+        this.houseEnviorment.position.set(paramX, paramY, paramZ)
         // car.scale.set(paramX,paramY,paramZ);
-        this.#scene.add(glb.scene);
+        this.#scene.add(this.houseEnviorment);
         if (bol == true) {
           this.duck = glb.scene.children[0];
           this.duck.position.set(paramX, paramY, paramZ);
@@ -263,6 +268,8 @@ export class AppController {
       },
       function (xhr) {
         // console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
+        /**ELEMTNOS PRINCIPALES = TRUE */
+        /**QUITAR PANTALLA DE CARGA */
       },
       function (error) {
         // console.log("An error happened");
@@ -270,5 +277,92 @@ export class AppController {
     );
   }
 
+  loadElementsRewards(data){
+
+    for(let i = 0;i<data.length;i++){
+      this.loader = new GLTFLoader();
+      var model
+
+      this.loader.load(data[i].Url,(glb)=>{
+        model = glb.scene
+        model.position.set(data[i].ParamX,data[i].ParamY,data[i].ParamaZ)
+      })
+
+      this.#scene.add(model)
+    }
+    
+  }
+
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+  /**LISTENER PARA LA TIENDA */
+
+  listenerShop() {
+    
+    document.querySelector('.grid-shop').addEventListener('click', async (e) => {
+      if (e.target.nodeName == 'IMG' || e.target.nodeName == 'DIV') {
+        e.target.parentElement.click()
+      } else if (e.target.nodeName == 'LI') {
+        if (this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].Price <= parseInt(this.user.Coins)) {
+          console.log(this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)])
+
+          var cuerpoCoins = {
+            IdUser: this.user.IdUser,
+            Coins: this.user.Coins - this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].Price
+          }
+
+          var cuerpoForniture = {
+            Id_User:this.user.IdUser,
+            Name:this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].Name,
+            Paramx:this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].ParamX,
+            ParamY:this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].ParamY,
+            ParamaZ:this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].ParamaZ,
+            IdRewardShop:this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].IdRewardShop,
+            Url:this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].Url
+          }
+
+          // await this.fetch.fetchCoins(cuerpoCoins)
+          // await this.fetch.fetchSaveForniture(cuerpoForniture)
+
+          this.arrayRewards.push(cuerpoForniture)
+          localStorage.setItem('rewards',JSON.stringify(this.arrayRewards))
+
+          this.loadElements(
+            this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].Url,
+            this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].ParamX,
+            this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].ParamY,
+            this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].ParamaZ,
+            )
+
+          
+
+        } else {
+          console.log('no tienes dinero suficiente')
+        }
+      }
+
+    })
+  }
 }
+
+
+
+/**
+ * 
+ *ES UN DIV OCUPA TODA LA PANTALLA QUE TIENE DE STYLE
+ *
+ *  FUNCION QUITAR LA PANTALLA DE CARGA --->   
+ * 
+ * 
+ * LA CONDICION ELEMENTOS PRIUNCIPALES ES TRUE Y LA CONDICION REWARDS SHOPS ES TRUE?
+ * SI ES TRUE 
+ *  FUNCION QUITAR LA PANTALLA DE CARGA ()
+ *  * 
+ * 
+ * 
+ * 
+ * CASA Y EL PATO  ==== 
+ * 
+ * 
+ */

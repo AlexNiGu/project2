@@ -117,7 +117,26 @@ export class Fetch {
 
     }
 
-    fetchShop() {
+    async fetchSaveForniture(cuerpo) {
+
+        options = {
+            method:'post',
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify(cuerpo)
+        }
+
+
+        await fetch('http//:localhost:3000/rewards-user')
         
+    }
+
+    async fetchCoins(cuerpo){
+
+       var options = {
+            method:'post',
+            body:JSON.stringify(cuerpo),
+            headers:{"Content-Type":"application/json"}
+        }
+        await fetch('http://localhost:3000/rewards-coins',options)
     }
 }
