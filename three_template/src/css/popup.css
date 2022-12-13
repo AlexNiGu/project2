@@ -14,3 +14,16 @@
     height: 80%;
     background-color: aliceblue
 }
+
+.button-iz-popup{
+    top: 50%;
+    left: 0%;
+    position: absolute;
+}
+
+.button-der-popup{
+    top: 50%;
+    right: 0%;
+    position: absolute;
+    
+}

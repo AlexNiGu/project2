@@ -1,5 +1,6 @@
 import { AppController } from './AppController.js';
 import { Cursor } from './modules/Cursor.js';
+import { ChargingPage } from './view/charging.js';
 // import Shop from '../shop/shop.js';
 
 
@@ -68,6 +69,8 @@ const firstInit = new Promise((resolve,reject)=>{
 
 async function renderCanvas(){
 
+    const charging = new ChargingPage()
+
         await fetchGetInfoUser()
         await fetchGetRewardsUser()
    
@@ -82,6 +85,7 @@ async function renderCanvas(){
     body.insertBefore(div, body.childNodes[0])
     body.insertBefore(canvas, body.childNodes[1])
     var uiRoot = document.getElementById('root-ui');
+    uiRoot.innerHTML += charging.renderPage()
     myAppControl = new AppController(uiRoot);
     animate()
 }

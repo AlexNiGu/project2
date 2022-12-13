@@ -1,0 +1,26 @@
+.charging-page{
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffff;
+    opacity: 1;
+    transition: 5s;
+    z-index: 1000;
+    top: 0;
+}
+.charging-page h1{
+   color: black;
+}
+
+.vanish{
+    opacity: 0;
+}
+
+
+
+.destroy{
+    display: none;
+}

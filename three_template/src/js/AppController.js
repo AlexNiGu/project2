@@ -3,7 +3,7 @@ import { Enviorment } from "./modules/Enviorment.js";
 import { ViewUI } from "./view/ViewUI.js";
 import { Ducktor } from "./view/3dModel/Ducktor.js";
 import { Cursor } from "./modules/Cursor.js";
-
+import { ChargingPage } from "./view/charging.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 import { CameraAnimation } from "./modules/CameraAnimation.js";
@@ -49,6 +49,7 @@ export class AppController {
     this.#viewUI = new ViewUI(this.#camera);
     this.cameraAnimation = new CameraAnimation(this.#camera);
 
+    
     this.indexNumber = ''
     this.arrayRewards = []
     
@@ -57,8 +58,9 @@ export class AppController {
     console.log(this.arrayRewards)
     this.clock = new THREE.Clock();
 
-    this.loadElements(this.#myEnviorment.getHouse());
-    this.loadElements(this.#ducktor.getDucktor(), 26, 1.5, -1, true);
+    this.loadElementsDucktor(this.#ducktor.getDucktor(), 26, 1.5, -1);
+    this.loadElementsHouse(this.#myEnviorment.getHouse());
+    
     this.loadElementsRewards(this.arrayRewards)
 
 
@@ -268,7 +270,8 @@ export class AppController {
     })
 
   }
-  loadElements(element, paramX = 0, paramY = 0, paramZ = 0, bol = false) {
+  loadElementsHouse(element, paramX = 0, paramY = 0, paramZ = 0) {
+    var i = 0
     this.loader = new GLTFLoader();
     var mixer;
 
@@ -278,10 +281,34 @@ export class AppController {
         this.houseEnviorment = glb.scene.children[1]; // Array of two (object and mesh). You need to get the mesh
         this.houseEnviorment = glb.scene;
         this.houseEnviorment.position.set(paramX, paramY, paramZ)
-        // this.houseEnviorment.rotation.set(RotationX,RotationY,0)
-        // car.scale.set(paramX,paramY,paramZ);
         this.#scene.add(this.houseEnviorment);
-        if (bol == true) {
+      },
+      function (xhr) {
+        console.log((xhr.loaded / xhr.total) * 100 + ' soy la casa')
+        if((xhr.loaded / xhr.total) * 100 === 100){
+          setTimeout(function(){
+            document.getElementById('charging-page').classList.add('vanish')
+            setTimeout(function(){
+              let node = document.getElementById('charging-page')
+              node.parentNode.removeChild(node)
+            },5300)
+          },1000)
+          
+        };
+      },
+      function (error) {
+        // console.log("An error happened");
+      }
+    );
+  }
+  loadElementsDucktor(element, paramX = 0, paramY = 0, paramZ = 0) {
+
+    this.loader = new GLTFLoader();
+    var mixer;
+
+    this.loader.load(
+      element,
+      (glb) => {
           this.duck = glb.scene.children[0];
           this.duck.position.set(paramX, paramY, paramZ);
           this.duck.rotation.set(0, 3.1, 0);
@@ -296,20 +323,9 @@ export class AppController {
 
           this.mixer = mixer;
           this.#ducktor.playAnimationDefault(this.duck);
-        }
-        // // console.log("d", elem);
-      },
-      function (xhr) {
-        // console.log((xhr.loaded / xhr.total) * 100 + "% loaded");
-        /**ELEMTNOS PRINCIPALES = TRUE */
-        /**QUITAR PANTALLA DE CARGA */
-      },
-      function (error) {
-        // console.log("An error happened");
-      }
-    );
+          this.#scene.add(this.duck)
+        });
   }
-
   loadElementsRewards(data){
 
     for(let i = 0;i<data.length;i++){
@@ -350,10 +366,16 @@ export class AppController {
     }
     
   }
+  destroyPage(){
+    console.log('destroy')
+    let node = document.getElementById('charging-page')
+    node.parentNode.removeChild(node)
+  }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
   async logicShop(urlIntegrado){
+
     var cuerpoCoins = {
       IdUser: this.user.IdUser,
       Coins: this.user.Coins - this.fetch.shopFornitures[this.indexNumber].Price
@@ -409,20 +431,17 @@ export class AppController {
 
             await this.fetch.getPersonalPaints()
             console.log('es el cuadro')
-            this.#viewUI.renderPopUp(this.fetch.personalPaints)
+            this.#viewUI.data = this.fetch.personalPaints
+            this.#viewUI.renderPopUp()
+            this.#viewUI.listennersPopUp()
 
-
-            document.getElementById('popup-aceptar').addEventListener('click',()=>{
+              document.getElementById('popup-aceptar').addEventListener('click',()=>{
               const url = document.getElementById('image-selected').src
 
               this.logicShop(url)
+              
             })
-            /**RENDER POPUP || view 
-             * DIFERENTES OPCIONES DE CUADROS
-             * LISTENERS DE ACEPTAR Y O CANCELAR
-             * CONSEGUIR GUARDAR LA URLintegrada
-             * SI ES ACEPTAR DISPARA this.logicShop()
-            */
+
           }else{
             this.logicShop()
           }

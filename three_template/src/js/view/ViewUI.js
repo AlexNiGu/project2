@@ -11,6 +11,8 @@ export class ViewUI {
     this.camera = camera;
     this.anim = new CameraAnimation(camera);
     this.duckAnim = new Ducktor();
+    this.i = 0
+    this.data
   }
 
   render(myExpresion) {
@@ -398,11 +400,13 @@ export class ViewUI {
     }
 
   }
- renderPopUp(data){
-console.log(data)
-  const popUp =`<div class="popup">
-  <div class="imagen-popup">
-  <img src="${data[0].URL_Dibujo}" id="image-selected">
+ renderPopUp(i=0){
+
+  const popUp =`<div class="popup" id="popup">
+  <div class="imagen-popup" id="imagen-popup">
+  <button id="button-iz-popup" class="button-iz-popup"> izquierda </button>
+  <button id="button-der-popup" class="button-der-popup"> derecha </button> 
+  <img src="${this.data[i].URL_Dibujo}" id="image-selected">
   </div>
   <div class="popup-buttons">
   <button id="popup-aceptar">Aceptar</button>
@@ -411,7 +415,52 @@ console.log(data)
   </div>`
           
   document.querySelector('.shop').innerHTML += popUp
+  }
+
+  listennersPopUp(){
+
+    document.getElementById("button-der-popup").addEventListener('click',()=>{
+
+      let node = document.getElementById("image-selected")
+      node.parentElement.removeChild(node)
+
+      if(this.data.length != 0){
+
+        if(this.i < this.data.length -1){
+
+          this.i++
+
+        }else{
+          this.i = 0
         }
+        console.log(this.i)
+        document.getElementById('imagen-popup').innerHTML += `<img src="${this.data[this.i].URL_Dibujo}" id="image-selected"></img>`
+        this.listennersPopUp()
+      }
+
+    })
+
+    document.getElementById("button-iz-popup").addEventListener('click',()=>{
+
+      let node = document.getElementById("image-selected")
+      node.parentElement.removeChild(node)
+
+      if(this.data.length != 0){
+
+        if(this.i > 0){
+          this.i--
+        }else{
+          this.i = this.data.length -1
+        }
+        console.log(this.i)
+        document.getElementById('imagen-popup').innerHTML += `<img src="${this.data[this.i].URL_Dibujo}" id="image-selected"></img>`
+        this.listennersPopUp()
+      }
+      
+    })
+  }
+
+
   appendReward(data) {
     for (let i = 0; i < data.length; i++) {
       document.querySelector('.grid-shop').innerHTML +=
