@@ -1,5 +1,6 @@
 import { CameraAnimation } from "../modules/CameraAnimation";
 import { Ducktor } from "./3dModel/Ducktor";
+import { Memorama } from "../modules/memorama";
 
 export class ViewUI {
   UIroot = document.getElementById("root-ui");
@@ -68,15 +69,11 @@ export class ViewUI {
         </div>`;
 
         this.logicExpresion = 'conversation';
-        break;
-
-      case "play":
-        myView = ``;
-
-        break;
+        
+        break
 
       case "shop":
-        var image = new Image();
+        // var image = new Image();
         myView = `
                     <div class="shop">
                         <header class="flex">
@@ -97,6 +94,30 @@ export class ViewUI {
                             </ul>
                         </main>
                     </div>`;
+        break;
+        case 'play':
+          console.log('entro en tu cu')
+          myView = `
+            <div class="contenedor-general memograma" style="z-index: 3;>
+            <header class="flex">
+              <h1>Dibujo!</h1>
+              <div>
+                  <div class="close center">
+                  <svg width="41" height="39" viewBox="0 0 41 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <line x1="5.67111" y1="3.15967" x2="37.2604" y2="34.749" stroke="#F9F6E3" stroke-width="6" stroke-linecap="round"/>
+                      <line x1="35.1934" y1="4.64596" x2="4.29314" y2="35.5462" stroke="#F9F6E3" stroke-width="6" stroke-linecap="round"/>
+                      </svg>
+                  </div>
+              </div>
+            </header>
+            <div class="game-card">
+              <div class="contenedor-tarjetas"></div>
+              <div class="pantalla-bloqueada">
+                <h2 class="mensaje">¡Has perdido el juego!</h2>
+              </div>
+            </div>
+          </div>
+        `
         break;
       default:
         myView = `
@@ -200,6 +221,99 @@ export class ViewUI {
           }
         });
         break;
+      case 'play':
+        
+        var imgCover = new Image();
+        var img1 = new Image();
+        var img2 = new Image();
+        var img3 = new Image();
+        var img4 = new Image();
+        var img5 = new Image();
+        var img6 = new Image();
+        var img7 = new Image();
+        var img8 = new Image();
+
+        imgCover.src= require('../../assets/img/doodad.jpg');
+        img1.src= require('../../assets/img/1.jpg');
+        img2.src= require('../../assets/img/2.jpg');
+        img3.src= require('../../assets/img/3.jpg');
+        img4.src= require('../../assets/img/4.jpg');
+        img5.src= require('../../assets/img/5.jpg');
+        img6.src= require('../../assets//img/6.jpg');
+        img7.src= require('../../assets/img/7.jpg');
+        img8.src= require('../../assets/img/8.jpg');
+
+        var json = [
+          {
+              "src": img1.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img1.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img2.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img2.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img3.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img3.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img4.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img4.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img5.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img5.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img6.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img6.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img7.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img7.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img8.src,
+              "default" : imgCover.src
+          },
+          {
+              "src": img8.src,
+              "default" : imgCover.src
+          }
+        ]
+
+
+        new Memorama(json);
+
+        break;
       case "shop":
         if (!bol) {
           this.appendReward(data)
@@ -224,6 +338,7 @@ export class ViewUI {
         });
         break;
       case 'conversation':
+        
 
         if (!bol) {
           // console.log(data)
@@ -243,9 +358,8 @@ export class ViewUI {
           });
 
           bol = true;
+        
         }
-
-
 
       ////////////////////////////////////////////////////////////////////////////////////
       //     const text = document.querySelector('.anim');
@@ -284,13 +398,26 @@ export class ViewUI {
     }
 
   }
-
+ renderPopUp(data){
+console.log(data)
+  const popUp =`<div class="popup">
+  <div class="imagen-popup">
+  <img src="${data[0].URL_Dibujo}" id="image-selected">
+  </div>
+  <div class="popup-buttons">
+  <button id="popup-aceptar">Aceptar</button>
+  <button id="popup-cancelar">Cancelar</button>
+  </div>
+  </div>`
+          
+  document.querySelector('.shop').innerHTML += popUp
+        }
   appendReward(data) {
     for (let i = 0; i < data.length; i++) {
       document.querySelector('.grid-shop').innerHTML +=
         `<li class="product" data-index-number="${i}">
             <div class="container-prod">
-                <div class="center"><img src="${data[i].Url}" alt="product img" class="center"></div>
+                <div class="center"><img src="${data[i].UrlImagen}" alt="product img" class="center"></div>
                 <div class="center"><h3 class="center price">${data[i].Price}</h3></div>
             </div>
             <p class="title-product">${data[i].Name}</p>

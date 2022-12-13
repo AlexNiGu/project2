@@ -6,6 +6,8 @@ import { Cursor } from './modules/Cursor.js';
 var myAppControl = {}
 new Cursor()
 
+
+
 const container = document.getElementById('container')
 
 // yes
@@ -64,10 +66,10 @@ const firstInit = new Promise((resolve,reject)=>{
 })
 
 
-function renderCanvas(){
+async function renderCanvas(){
 
-        fetchGetInfoUser()
-        fetchGetRewardsUser()
+        await fetchGetInfoUser()
+        await fetchGetRewardsUser()
    
 
     const body = document.getElementById('body')

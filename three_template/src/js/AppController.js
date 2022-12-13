@@ -49,18 +49,28 @@ export class AppController {
     this.#viewUI = new ViewUI(this.#camera);
     this.cameraAnimation = new CameraAnimation(this.#camera);
 
+    this.indexNumber = ''
     this.arrayRewards = []
     
     JSON.parse(localStorage.getItem('rewards')) != null? this.arrayRewards= JSON.parse(localStorage.getItem('rewards')):''
 
+    console.log(this.arrayRewards)
     this.clock = new THREE.Clock();
 
     this.loadElements(this.#myEnviorment.getHouse());
     this.loadElements(this.#ducktor.getDucktor(), 26, 1.5, -1, true);
+    this.loadElementsRewards(this.arrayRewards)
 
 
     this.user = JSON.parse(localStorage.getItem('user'))
+
+    if(this.#scene.length -2 != this.arrayRewards.length){
+      // window.location.reload()
+    }
+
+    console.log("dsadasdasdasdasd", this.#scene.children);
   }
+  
 
   draw() {
     this.#render.render(this.#scene, this.#camera); // three
@@ -162,9 +172,13 @@ export class AppController {
             document.querySelector(".menu").style.display = "none";
 
             setTimeout(async () => {
+              console.log('toy aqui')
               await this.fetch.fetchGetConversation();
 
+              this.user = await JSON.parse(localStorage.getItem('user'))
+
               cuerpo.IdTest = this.fetch.test[0].IdTest
+              cuerpo.Numtest = this.user.Numtest+1
               // console.log(this.fetch.test)
               this.#viewUI.render("conversation");
               var i = 0
@@ -175,10 +189,11 @@ export class AppController {
                 if (i <= 5) {
                   // console.log(i)
                   cuerpo[`Respuesta${i}`] = parseInt(e.target.dataset.indexNumber)
-                  this.drawLogic(i)
+                  this.drawLogic(i)  
                 }
                 if (i == 5) {
                   this.fetch.responseConversation(cuerpo)
+                  console.log('estas en la pregunta 5')
                 }
               })
             }, 1500);
@@ -190,7 +205,7 @@ export class AppController {
 
             setTimeout(async () => {
               await this.fetch.getFurnitures()
-              await this.fetch.getPersonalPaints()
+              
 
               this.view = this.#viewUI.render("shop");
               this.#viewUI.drawLogic("shop", this.duck, this.fetch.shopFornitures, false);
@@ -203,7 +218,13 @@ export class AppController {
 
             break;
           case "gameUI":
-            // console.log("game");
+            console.log("game");
+            setTimeout(async () => {
+            console.log("entro")
+
+              this.#viewUI.render("play");
+              this.#viewUI.drawLogic("play");
+            }, 1500);
             this.#ducktor.playAnimationGame();
             this.cameraAnimation.playAnimationConversation();
             document.querySelector(".menu").style.display = "none";
@@ -236,6 +257,17 @@ export class AppController {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  loadSingularElement(element, paramX = 0, paramY = 0, paramZ = 0,RotationX=0,RotationY=0){
+    var model
+    this.loader = new GLTFLoader();
+    this.loader.load(element, (glb)=>{
+      model = glb.scene
+      model.position.set(paramX,paramY,paramZ)
+      model.rotation.set(RotationX,RotationY,0)
+      this.#scene.add(model)
+    })
+
+  }
   loadElements(element, paramX = 0, paramY = 0, paramZ = 0, bol = false) {
     this.loader = new GLTFLoader();
     var mixer;
@@ -246,6 +278,7 @@ export class AppController {
         this.houseEnviorment = glb.scene.children[1]; // Array of two (object and mesh). You need to get the mesh
         this.houseEnviorment = glb.scene;
         this.houseEnviorment.position.set(paramX, paramY, paramZ)
+        // this.houseEnviorment.rotation.set(RotationX,RotationY,0)
         // car.scale.set(paramX,paramY,paramZ);
         this.#scene.add(this.houseEnviorment);
         if (bol == true) {
@@ -286,15 +319,78 @@ export class AppController {
       this.loader.load(data[i].Url,(glb)=>{
         model = glb.scene
         model.position.set(data[i].ParamX,data[i].ParamY,data[i].ParamaZ)
+        model.rotation.set(data[i].RotationX,data[i].RotationY,0)
+
+        if(data[i].Name == 'Cuadro'){
+          console.log(data[i].UrlIntegrado)
+          const texture = new THREE.TextureLoader().load(data[i].UrlIntegrado)
+          texture.encoding = THREE.sRGBEncoding;
+          texture.wrapS = THREE.RepeatWrapping
+          texture.wrapT = THREE.RepeatWrapping
+          texture.repeat.set(4,4)
+          texture.flipY = false 
+  
+          var mesh = model.children[1]
+
+        mesh.material = new THREE.MeshStandardMaterial({
+          map:texture
+        })
+
+        mesh.position.set(data[i].ParamX-20,data[i].ParamY,-39)
+        mesh.rotation.set(0,Math.PI /2 ,0)
+        // model.children[1].background = texture
+        console.log(mesh)
+        this.#scene.add(mesh)
+        }
+        
+        this.#scene.add(model)
       })
 
-      this.#scene.add(model)
+      
     }
     
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  async logicShop(urlIntegrado){
+    var cuerpoCoins = {
+      IdUser: this.user.IdUser,
+      Coins: this.user.Coins - this.fetch.shopFornitures[this.indexNumber].Price
+    }
+
+    this.user.Coins = cuerpoCoins.Coins
+    localStorage.setItem('user',JSON.stringify(this.user))
+
+    var cuerpoForniture = {
+      Id_User:this.user.IdUser,
+      Name:this.fetch.shopFornitures[this.indexNumber].Name,
+      Paramx:this.fetch.shopFornitures[this.indexNumber].ParamX,
+      ParamY:this.fetch.shopFornitures[this.indexNumber].ParamY,
+      ParamaZ:this.fetch.shopFornitures[this.indexNumber].ParamaZ,
+      RotationX:this.fetch.shopFornitures[this.indexNumber].RotationX,
+      RotationY:this.fetch.shopFornitures[this.indexNumber].RotationY,
+      IdRewardShop:this.fetch.shopFornitures[this.indexNumber].IdRewardShop,
+      Url:this.fetch.shopFornitures[this.indexNumber].Url,
+      UrlIntegrado: urlIntegrado
+    }
+
+    await this.fetch.fetchCoins(cuerpoCoins)
+    await this.fetch.fetchSaveForniture(cuerpoForniture)
+
+    this.arrayRewards.push(cuerpoForniture)
+    localStorage.setItem('rewards',JSON.stringify(this.arrayRewards))
+
+    this.loadSingularElement(
+      this.fetch.shopFornitures[this.indexNumber].Url,
+      this.fetch.shopFornitures[this.indexNumber].ParamX,
+      this.fetch.shopFornitures[this.indexNumber].ParamY,
+      this.fetch.shopFornitures[this.indexNumber].ParamaZ,
+      this.fetch.shopFornitures[this.indexNumber].RotationX,
+      this.fetch.shopFornitures[this.indexNumber].RotationY,
+      urlIntegrado
+      )
+  }
 
   /**LISTENER PARA LA TIENDA */
 
@@ -304,36 +400,33 @@ export class AppController {
       if (e.target.nodeName == 'IMG' || e.target.nodeName == 'DIV') {
         e.target.parentElement.click()
       } else if (e.target.nodeName == 'LI') {
-        if (this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].Price <= parseInt(this.user.Coins)) {
-          console.log(this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)])
 
-          var cuerpoCoins = {
-            IdUser: this.user.IdUser,
-            Coins: this.user.Coins - this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].Price
+        this.indexNumber = parseInt(e.target.dataset.indexNumber)
+
+        if (this.fetch.shopFornitures[this.indexNumber].Price <= parseInt(this.user.Coins)) {
+
+          if(this.fetch.shopFornitures[this.indexNumber].Name == 'Cuadro'){
+
+            await this.fetch.getPersonalPaints()
+            console.log('es el cuadro')
+            this.#viewUI.renderPopUp(this.fetch.personalPaints)
+
+
+            document.getElementById('popup-aceptar').addEventListener('click',()=>{
+              const url = document.getElementById('image-selected').src
+
+              this.logicShop(url)
+            })
+            /**RENDER POPUP || view 
+             * DIFERENTES OPCIONES DE CUADROS
+             * LISTENERS DE ACEPTAR Y O CANCELAR
+             * CONSEGUIR GUARDAR LA URLintegrada
+             * SI ES ACEPTAR DISPARA this.logicShop()
+            */
+          }else{
+            this.logicShop()
           }
-
-          var cuerpoForniture = {
-            Id_User:this.user.IdUser,
-            Name:this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].Name,
-            Paramx:this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].ParamX,
-            ParamY:this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].ParamY,
-            ParamaZ:this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].ParamaZ,
-            IdRewardShop:this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].IdRewardShop,
-            Url:this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].Url
-          }
-
-          // await this.fetch.fetchCoins(cuerpoCoins)
-          // await this.fetch.fetchSaveForniture(cuerpoForniture)
-
-          this.arrayRewards.push(cuerpoForniture)
-          localStorage.setItem('rewards',JSON.stringify(this.arrayRewards))
-
-          this.loadElements(
-            this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].Url,
-            this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].ParamX,
-            this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].ParamY,
-            this.fetch.shopFornitures[parseInt(e.target.dataset.indexNumber)].ParamaZ,
-            )
+          
 
           
 

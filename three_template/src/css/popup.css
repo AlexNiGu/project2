@@ -1,0 +1,16 @@
+.popup{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    height: 60%;
+    background-color: blue;
+    z-index: 1000;
+    top: 0;
+}
+
+.imagen-popup{
+    width: 100%;
+    height: 80%;
+    background-color: aliceblue
+}

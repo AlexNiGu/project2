@@ -48,16 +48,14 @@ export class Fetch {
 
     }
 
-    async fetchGetConversation(){
+    async fetchGetConversation(){        
+     
+        this.user = await JSON.parse(localStorage.getItem('user'))
 
-        
-
-        var cuerpo = {
-            IdTest:this.user.Numtest
-        }
+        console.log(this.user)
         var options = {
             method:'post',
-            body:JSON.stringify(cuerpo),
+            body:JSON.stringify(this.user),
             headers:{"Content-Type":"application/json"}
         }
 
@@ -65,6 +63,7 @@ export class Fetch {
         .then(res=>res.json())
         .then(response=>this.test = response)
 
+        console.log(this.test)
     }
 
     async responseConversation(cuerpo){
@@ -119,14 +118,14 @@ export class Fetch {
 
     async fetchSaveForniture(cuerpo) {
 
-        options = {
+       var options = {
             method:'post',
             headers:{"Content-Type":"application/json"},
             body:JSON.stringify(cuerpo)
         }
 
 
-        await fetch('http//:localhost:3000/rewards-user')
+        await fetch('http://localhost:3000/rewards-user',options)
         
     }
 
