@@ -49,30 +49,30 @@ export class AppController {
     this.#viewUI = new ViewUI(this.#camera);
     this.cameraAnimation = new CameraAnimation(this.#camera);
 
-    
+
     this.indexNumber = ''
     this.arrayRewards = []
-    
-    JSON.parse(localStorage.getItem('rewards')) != null? this.arrayRewards= JSON.parse(localStorage.getItem('rewards')):''
+
+    JSON.parse(localStorage.getItem('rewards')) != null ? this.arrayRewards = JSON.parse(localStorage.getItem('rewards')) : ''
 
     console.log(this.arrayRewards)
     this.clock = new THREE.Clock();
 
     this.loadElementsDucktor(this.#ducktor.getDucktor(), 26, 1.5, -1);
     this.loadElementsHouse(this.#myEnviorment.getHouse());
-    
+
     this.loadElementsRewards(this.arrayRewards)
 
 
     this.user = JSON.parse(localStorage.getItem('user'))
 
-    if(this.#scene.length -2 != this.arrayRewards.length){
+    if (this.#scene.length - 2 != this.arrayRewards.length) {
       // window.location.reload()
     }
 
     console.log("dsadasdasdasdasd", this.#scene.children);
   }
-  
+
 
   draw() {
     this.#render.render(this.#scene, this.#camera); // three
@@ -150,6 +150,17 @@ export class AppController {
 
                 await this.fetch.fetchSavePainting(formData)
 
+                await this.fetch.responseConversation(cuerpo)
+
+                var cuerpoCoins = {
+                  IdUser: this.user.IdUser,
+                  Coins: this.user.Coins + 200
+                }
+
+                this.user.Coins = cuerpoCoins.Coins
+                this.changeShowCoins(this.user.Coins)
+                await this.fetch.fetchCoins(cuerpoCoins)
+
               })
 
 
@@ -180,22 +191,32 @@ export class AppController {
               this.user = await JSON.parse(localStorage.getItem('user'))
 
               cuerpo.IdTest = this.fetch.test[0].IdTest
-              cuerpo.Numtest = this.user.Numtest+1
+              cuerpo.Numtest = this.user.Numtest + 1
               // console.log(this.fetch.test)
               this.#viewUI.render("conversation");
               var i = 0
               this.drawLogic(i)
 
-              document.querySelector(".answer").addEventListener('click', (e) => {
+              document.querySelector(".answer").addEventListener('click',async (e) => {
                 i++
                 if (i <= 5) {
                   // console.log(i)
                   cuerpo[`Respuesta${i}`] = parseInt(e.target.dataset.indexNumber)
-                  this.drawLogic(i)  
+                  this.drawLogic(i)
                 }
                 if (i == 5) {
-                  this.fetch.responseConversation(cuerpo)
-                  console.log('estas en la pregunta 5')
+
+                  await this.fetch.responseConversation(cuerpo)
+
+                  var cuerpoCoins = {
+                    IdUser: this.user.IdUser,
+                    Coins: this.user.Coins + 300
+                  }
+
+                  this.user.Coins = cuerpoCoins.Coins
+                  this.changeShowCoins(this.user.Coins)
+                  await this.fetch.fetchCoins(cuerpoCoins)
+
                 }
               })
             }, 1500);
@@ -207,7 +228,7 @@ export class AppController {
 
             setTimeout(async () => {
               await this.fetch.getFurnitures()
-              
+
 
               this.view = this.#viewUI.render("shop");
               this.#viewUI.drawLogic("shop", this.duck, this.fetch.shopFornitures, false);
@@ -222,7 +243,7 @@ export class AppController {
           case "gameUI":
             console.log("game");
             setTimeout(async () => {
-            console.log("entro")
+              console.log("entro")
 
               this.#viewUI.render("play");
               this.#viewUI.drawLogic("play");
@@ -259,13 +280,13 @@ export class AppController {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  loadSingularElement(element, paramX = 0, paramY = 0, paramZ = 0,RotationX=0,RotationY=0){
+  loadSingularElement(element, paramX = 0, paramY = 0, paramZ = 0, RotationX = 0, RotationY = 0) {
     var model
     this.loader = new GLTFLoader();
-    this.loader.load(element, (glb)=>{
+    this.loader.load(element, (glb) => {
       model = glb.scene
-      model.position.set(paramX,paramY,paramZ)
-      model.rotation.set(RotationX,RotationY,0)
+      model.position.set(paramX, paramY, paramZ)
+      model.rotation.set(RotationX, RotationY, 0)
       this.#scene.add(model)
     })
 
@@ -285,15 +306,15 @@ export class AppController {
       },
       function (xhr) {
         console.log((xhr.loaded / xhr.total) * 100 + ' soy la casa')
-        if((xhr.loaded / xhr.total) * 100 === 100){
-          setTimeout(function(){
+        if ((xhr.loaded / xhr.total) * 100 === 100) {
+          setTimeout(function () {
             document.getElementById('charging-page').classList.add('vanish')
-            setTimeout(function(){
+            setTimeout(function () {
               let node = document.getElementById('charging-page')
               node.parentNode.removeChild(node)
-            },5300)
-          },1000)
-          
+            }, 5300)
+          }, 1000)
+
         };
       },
       function (error) {
@@ -309,64 +330,64 @@ export class AppController {
     this.loader.load(
       element,
       (glb) => {
-          this.duck = glb.scene.children[0];
-          this.duck.position.set(paramX, paramY, paramZ);
-          this.duck.rotation.set(0, 3.1, 0);
+        this.duck = glb.scene.children[0];
+        this.duck.position.set(paramX, paramY, paramZ);
+        this.duck.rotation.set(0, 3.1, 0);
 
-          mixer = new THREE.AnimationMixer(this.duck);
-          const clips = glb.animations;
-          clips.forEach(function (clip) {
-            const action = mixer.clipAction(clip);
-            action.play();
-            action.timeScale = 0.5;
-          });
-
-          this.mixer = mixer;
-          this.#ducktor.playAnimationDefault(this.duck);
-          this.#scene.add(this.duck)
+        mixer = new THREE.AnimationMixer(this.duck);
+        const clips = glb.animations;
+        clips.forEach(function (clip) {
+          const action = mixer.clipAction(clip);
+          action.play();
+          action.timeScale = 0.5;
         });
-  }
-  loadElementsRewards(data){
 
-    for(let i = 0;i<data.length;i++){
+        this.mixer = mixer;
+        this.#ducktor.playAnimationDefault(this.duck);
+        this.#scene.add(this.duck)
+      });
+  }
+  loadElementsRewards(data) {
+
+    for (let i = 0; i < data.length; i++) {
       this.loader = new GLTFLoader();
       var model
 
-      this.loader.load(data[i].Url,(glb)=>{
+      this.loader.load(data[i].Url, (glb) => {
         model = glb.scene
-        model.position.set(data[i].ParamX,data[i].ParamY,data[i].ParamaZ)
-        model.rotation.set(data[i].RotationX,data[i].RotationY,0)
+        model.position.set(data[i].ParamX, data[i].ParamY, data[i].ParamaZ)
+        model.rotation.set(data[i].RotationX, data[i].RotationY, 0)
 
-        if(data[i].Name == 'Cuadro'){
+        if (data[i].Name == 'Cuadro') {
           console.log(data[i].UrlIntegrado)
           const texture = new THREE.TextureLoader().load(data[i].UrlIntegrado)
           texture.encoding = THREE.sRGBEncoding;
           texture.wrapS = THREE.RepeatWrapping
           texture.wrapT = THREE.RepeatWrapping
-          texture.repeat.set(4,4)
-          texture.flipY = false 
-  
+          texture.repeat.set(4, 4)
+          texture.flipY = false
+
           var mesh = model.children[1]
 
-        mesh.material = new THREE.MeshStandardMaterial({
-          map:texture
-        })
+          mesh.material = new THREE.MeshStandardMaterial({
+            map: texture
+          })
 
-        mesh.position.set(data[i].ParamX-20,data[i].ParamY,-39)
-        mesh.rotation.set(0,Math.PI /2 ,0)
-        // model.children[1].background = texture
-        console.log(mesh)
-        this.#scene.add(mesh)
+          mesh.position.set(data[i].ParamX - 20, data[i].ParamY, -39)
+          mesh.rotation.set(0, Math.PI / 2, 0)
+          // model.children[1].background = texture
+          console.log(mesh)
+          this.#scene.add(mesh)
         }
-        
+
         this.#scene.add(model)
       })
 
-      
+
     }
-    
+
   }
-  destroyPage(){
+  destroyPage() {
     console.log('destroy')
     let node = document.getElementById('charging-page')
     node.parentNode.removeChild(node)
@@ -374,7 +395,7 @@ export class AppController {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-  async logicShop(urlIntegrado){
+  async logicShop(urlIntegrado) {
 
     var cuerpoCoins = {
       IdUser: this.user.IdUser,
@@ -382,18 +403,19 @@ export class AppController {
     }
 
     this.user.Coins = cuerpoCoins.Coins
-    localStorage.setItem('user',JSON.stringify(this.user))
+    this.changeShowCoins(this.user.Coins)
+    localStorage.setItem('user', JSON.stringify(this.user))
 
     var cuerpoForniture = {
-      Id_User:this.user.IdUser,
-      Name:this.fetch.shopFornitures[this.indexNumber].Name,
-      Paramx:this.fetch.shopFornitures[this.indexNumber].ParamX,
-      ParamY:this.fetch.shopFornitures[this.indexNumber].ParamY,
-      ParamaZ:this.fetch.shopFornitures[this.indexNumber].ParamaZ,
-      RotationX:this.fetch.shopFornitures[this.indexNumber].RotationX,
-      RotationY:this.fetch.shopFornitures[this.indexNumber].RotationY,
-      IdRewardShop:this.fetch.shopFornitures[this.indexNumber].IdRewardShop,
-      Url:this.fetch.shopFornitures[this.indexNumber].Url,
+      Id_User: this.user.IdUser,
+      Name: this.fetch.shopFornitures[this.indexNumber].Name,
+      Paramx: this.fetch.shopFornitures[this.indexNumber].ParamX,
+      ParamY: this.fetch.shopFornitures[this.indexNumber].ParamY,
+      ParamaZ: this.fetch.shopFornitures[this.indexNumber].ParamaZ,
+      RotationX: this.fetch.shopFornitures[this.indexNumber].RotationX,
+      RotationY: this.fetch.shopFornitures[this.indexNumber].RotationY,
+      IdRewardShop: this.fetch.shopFornitures[this.indexNumber].IdRewardShop,
+      Url: this.fetch.shopFornitures[this.indexNumber].Url,
       UrlIntegrado: urlIntegrado
     }
 
@@ -401,7 +423,7 @@ export class AppController {
     await this.fetch.fetchSaveForniture(cuerpoForniture)
 
     this.arrayRewards.push(cuerpoForniture)
-    localStorage.setItem('rewards',JSON.stringify(this.arrayRewards))
+    localStorage.setItem('rewards', JSON.stringify(this.arrayRewards))
 
     this.loadSingularElement(
       this.fetch.shopFornitures[this.indexNumber].Url,
@@ -411,13 +433,13 @@ export class AppController {
       this.fetch.shopFornitures[this.indexNumber].RotationX,
       this.fetch.shopFornitures[this.indexNumber].RotationY,
       urlIntegrado
-      )
+    )
   }
 
   /**LISTENER PARA LA TIENDA */
 
   listenerShop() {
-    
+
     document.querySelector('.grid-shop').addEventListener('click', async (e) => {
       if (e.target.nodeName == 'IMG' || e.target.nodeName == 'DIV') {
         e.target.parentElement.click()
@@ -427,7 +449,7 @@ export class AppController {
 
         if (this.fetch.shopFornitures[this.indexNumber].Price <= parseInt(this.user.Coins)) {
 
-          if(this.fetch.shopFornitures[this.indexNumber].Name == 'Cuadro'){
+          if (this.fetch.shopFornitures[this.indexNumber].Name == 'Cuadro') {
 
             await this.fetch.getPersonalPaints()
             console.log('es el cuadro')
@@ -435,19 +457,19 @@ export class AppController {
             this.#viewUI.renderPopUp()
             this.#viewUI.listennersPopUp()
 
-              document.getElementById('popup-aceptar').addEventListener('click',()=>{
-              const url = document.getElementById('image-selected').src
+            document.getElementById('popup-aceptar').addEventListener('click', () => {
+            const url = document.getElementById('image-selected').src
 
               this.logicShop(url)
-              
+
             })
 
-          }else{
+          } else {
             this.logicShop()
           }
-          
 
-          
+
+
 
         } else {
           console.log('no tienes dinero suficiente')
@@ -455,6 +477,11 @@ export class AppController {
       }
 
     })
+  }
+
+
+  changeShowCoins(data) {
+    document.getElementById('show-coins').innerText = data
   }
 }
 
