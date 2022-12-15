@@ -4,9 +4,7 @@ export class ChargingPage{
 
         var myPage = `
         <div class='charging-page' id='charging-page'>
-
-            <h1>CARGANDO</h1>
- 
+            <div class="loader"></div>
         </div>
       `
       return myPage

@@ -12,7 +12,7 @@ export class Ducktor {
     timeLineGame;
     timeLineShop;
 
-    modelURL = new URL("./ducktor.glb", import.meta.url);
+    modelURL = new URL("../../../assets/doggo2.glb", import.meta.url);
 
     constructor(duck) {
 

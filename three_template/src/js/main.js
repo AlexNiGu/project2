@@ -1,6 +1,7 @@
 import { AppController } from './AppController.js';
 import { Cursor } from './modules/Cursor.js';
 import { ChargingPage } from './view/charging.js';
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 // import Shop from '../shop/shop.js';
 
 
@@ -91,6 +92,7 @@ async function renderCanvas(){
 }
 
 function animate() {
+    
     myAppControl.draw();
     myAppControl.update();
     requestAnimationFrame(animate);

@@ -38,14 +38,13 @@ body {
 
 .button-menu {
     border:none;
-  
-   
     width: 10em; 
     height: 10em;
     background: linear-gradient(180deg, #FFFFFF 0%, #E0F1FF 100%);
     border-bottom: 8px solid #79A5C7!important;
     border-radius: 34px;
 }
+
 
 button:hover {
     box-shadow: -8px 8px 0px #36776B;
@@ -136,4 +135,7 @@ button:hover {
     align-items:center;
     justify-content: center;
     gap: 1em;
+    position: absolute;
+    top: -490px;
+    left: 1200px;
 }

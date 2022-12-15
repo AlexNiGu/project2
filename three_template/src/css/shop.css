@@ -4,6 +4,8 @@
     border-radius: 35px;
     padding: 3em 6em 0 6em;
     margin: 2em 5em 0 5em;
+    position: absolute;
+    width: 90%;
 }
 
 .shop-header > h1 {
@@ -51,6 +53,10 @@
 .grid-shop {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr)) ;
+    list-style: none;
+    padding-top: 2em;
+    overflow-y: scroll;
+    height: 550px;
 }
 
 .container-prod {
@@ -60,6 +66,8 @@
     background-color: var(--green-color);
     padding: 1em;
     transition: 0.15s;
+    width: 229.57px;
+    height: 273.6px
 }
 
 .container-prod:hover {
@@ -68,12 +76,12 @@
     transform: scale(1.05);
 }
 
-.grid-shop {
+/* .grid-shop {
     list-style: none;
     padding-top: 2em;
     overflow-y: scroll;
     height: 700px;
-}
+} */
 .grid-shop::-webkit-scrollbar {
     width: 12px;
   }
@@ -124,4 +132,8 @@ img {
     letter-spacing: 0.025em;
     color: var(--text-color);
     margin-top:0.75em;
+}
+
+.svg-shop-fish{
+    margin-left: 30px;
 }

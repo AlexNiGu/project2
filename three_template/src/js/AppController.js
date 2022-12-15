@@ -58,7 +58,7 @@ export class AppController {
     console.log(this.arrayRewards)
     this.clock = new THREE.Clock();
 
-    this.loadElementsDucktor(this.#ducktor.getDucktor(), 26, 1.5, -1);
+    this.loadElementsDucktor("https://res.cloudinary.com/eloy411/image/upload/v1671056488/ducktor_3_fieoxn.glb", 26, 1.5, -1);
     this.loadElementsHouse(this.#myEnviorment.getHouse());
 
     this.loadElementsRewards(this.arrayRewards)
@@ -331,7 +331,7 @@ export class AppController {
       element,
       (glb) => {
         this.duck = glb.scene.children[0];
-        this.duck.position.set(paramX, paramY, paramZ);
+        this.duck.position.set(10, 10, -10);
         this.duck.rotation.set(0, 3.1, 0);
 
         mixer = new THREE.AnimationMixer(this.duck);
@@ -340,7 +340,7 @@ export class AppController {
           const action = mixer.clipAction(clip);
           action.play();
           action.timeScale = 0.5;
-        });
+        });7
 
         this.mixer = mixer;
         this.#ducktor.playAnimationDefault(this.duck);
