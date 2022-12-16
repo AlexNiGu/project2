@@ -86,7 +86,7 @@ export class AppController {
     // keyControls.resetHover(this.#scene);
     // keyControls.hoverPiece(this.#scene, this.#camera);
     // this.#myKeyControls.hoverPiece();
-    // this.#controls.update();
+    this.#controls.update();
 
     // This is for the animations of the character
     if (this.duck) {
