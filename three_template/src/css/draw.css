@@ -1,4 +1,5 @@
 .draw {
+    /* position: absolute; */
     padding: 2em;
     margin: 0em 7em 0 7em;
     font-family: 'Fredoka', sans-serif;
@@ -32,6 +33,7 @@
 }
 
 .container {
+    position: absolute;
     margin-top: 1em;
     height: 95%;
     display: flex;

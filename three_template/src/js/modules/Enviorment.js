@@ -17,8 +17,8 @@ export class Enviorment {
       0.1,
       1000
     );
-    this.camera.rotation.set(-0.356, 0, 0);
-    this.camera.position.set(27, 25, 32);
+    this.camera.rotation.set(-0.206, 0, 0);
+    this.camera.position.set(0, 10, 28);
     // console.log(this.camera);
 
     // Render the scece in the element that you want. In our case is a canvas
@@ -43,28 +43,28 @@ export class Enviorment {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    this.hlight = new THREE.AmbientLight(0x404040, 0.5);
+    this.hlight = new THREE.AmbientLight(0xffffff, 0.5);
     this.scene.add(this.hlight);
 
-    this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    this.directionalLight.position.set(0, 1, 0);
+    this.directionalLight = new THREE.DirectionalLight(0xf0f0f0, 0.5);
+    this.directionalLight.position.set(-5, -1, 0);
     this.directionalLight.castShadow = true;
     this.scene.add(this.directionalLight);
 
-    this.light = new THREE.PointLight(0xc4c4c4, 1);
-    this.light.position.set(0, 300, 500);
+    this.light = new THREE.PointLight(0x0f0f0f, 1);
+    this.light.position.set(0, 100, -200);
     this.scene.add(this.light);
 
-    this.light2 = new THREE.PointLight(0xc4c4c4, 1);
+    this.light2 = new THREE.PointLight(0x0f0f0f, 1);
     this.light2.position.set(500, 100, 0);
     this.scene.add(this.light2);
 
-    this.light3 = new THREE.PointLight(0xc4c4c4, 1);
-    this.light3.position.set(0, 100, -500);
+    this.light3 = new THREE.PointLight(0x111111, 1);
+    this.light3.position.set(50, 100, -200);
     this.scene.add(this.light3);
 
-    this.light4 = new THREE.PointLight(0xc4c4c4, 1);
-    this.light4.position.set(-500, 300, 500);
+    this.light4 = new THREE.PointLight(0x0f0f0f, 1);
+    this.light4.position.set(-50, 100, -200);
     this.scene.add(this.light4);
   }
 

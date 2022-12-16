@@ -111,7 +111,7 @@ export class ViewUI {
                         </main>
                     </div>`;
         break;
-        case 'play':
+      case 'play':
           console.log('entro en tu cu')
           myView = `
             <div class="contenedor-general memograma" style="z-index: 3;>
@@ -594,6 +594,19 @@ export class ViewUI {
             <p class="title-product">${data[i].Name}</p>
          </li>`
     }
+  }
+
+
+  renderPopUpDraw(data){
+    const popDraw = `<div class="popup" id="popup">
+    <div class="imagen-popup" id="imagen-popup">
+  <button id="button-draw-selected" class="button-iz-popup"> ${data[0].Tipo}</button>
+  <button id="button-libre" class="button-der-popup"> Libre </button> 
+  </div>
+  </div>
+    </div>`
+
+    document.querySelector('.draw').innerHTML += popDraw
   }
 }
 

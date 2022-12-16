@@ -22,8 +22,8 @@ export class CameraAnimation {
         // 27 / 35 / 32
         this.timeLineDraw
         .to(this.camera.position, {
-            x: 33, // frente -- es izquierda | ++ es derecha
-            y: 15, // abajo -- es basjo | ++ es arriba
+            x: 0, // frente -- es izquierda | ++ es derecha
+            y: 3, // abajo -- es basjo | ++ es arriba
             z: 24, // adelante -- es adelante | ++ es atras
             duration: 1.5,
             // ease: "expo.out",
@@ -43,7 +43,7 @@ export class CameraAnimation {
         // 27 / 35 / 32
         this.timeLineDraw
         .to(this.camera.position, {
-            x: 33, // frente -- es izquierda | ++ es derecha
+            x: 0, // frente -- es izquierda | ++ es derecha
             y: 3, // abajo -- es basjo | ++ es arriba
             z: 24, // adelante -- es adelante | ++ es atras
             duration: 1.5,
@@ -62,9 +62,9 @@ export class CameraAnimation {
         // 27 / 25 / 32
         this.timeLineDefault
         .to(this.camera.position, {
-            x: 27, // frente -- es izquierda | ++ es derecha
-            y: 25, // abajo -- es basjo | ++ es arriba
-            z: 32, // adelante -- es adelante | ++ es atras
+            x: 0, // frente -- es izquierda | ++ es derecha
+            y: 10, // abajo -- es basjo | ++ es arriba
+            z: 28, // adelante -- es adelante | ++ es atras
             duration: 1.5,
             // ease: "expo.out",
             // onUpdate: function() {
@@ -73,7 +73,7 @@ export class CameraAnimation {
         }, "+=0")
         .to(this.camera.rotation, {
             duration: 1.5, 
-            x: -0.356
+            x: -0.206
         }, "<");
     }
 
@@ -82,8 +82,8 @@ export class CameraAnimation {
         // 27 / 35 / 32
         this.timeLineDraw
         .to(this.camera.position, {
-            x: 33, // frente -- es izquierda | ++ es derecha
-            y: 15, // abajo -- es basjo | ++ es arriba
+            x: 0, // frente -- es izquierda | ++ es derecha
+            y: 3, // abajo -- es basjo | ++ es arriba
             z: 24, // adelante -- es adelante | ++ es atras
             duration: 1.5,
             // ease: "expo.out",
@@ -101,7 +101,7 @@ export class CameraAnimation {
         // 27 / 35 / 32
         this.timeLineShop
         .to(this.camera.position, {
-            x: 33, // frente -- es izquierda | ++ es derecha
+            x: 0, // frente -- es izquierda | ++ es derecha
             y: 3, // abajo -- es basjo | ++ es arriba
             z: 24, // adelante -- es adelante | ++ es atras
             duration: 1.5,

@@ -49,6 +49,9 @@ export class AppController {
     this.#viewUI = new ViewUI(this.#camera);
     this.cameraAnimation = new CameraAnimation(this.#camera);
 
+    this.paintSelected
+
+    this.conditionDraw = true
 
     this.indexNumber = ''
     this.arrayRewards = []
@@ -120,16 +123,20 @@ export class AppController {
         switch (this.sectionUI) {
           case "drawUI":
             // console.log("draw");
+            this.conditionDraw = true
             this.#ducktor.playAnimationDraw(this.duck);
             this.cameraAnimation.playAnimationDraw();
 
             setTimeout(async () => {
               this.view = this.#viewUI.render("draw");
               this.#viewUI.drawLogic("draw", this.duck);
+              
 
               /**FETCH PARA SABER QUE DIBUJO ES */
               await this.fetch.fetchGetPaiting()
-              // console.log(this.fetch.paint)
+              this.#viewUI.renderPopUpDraw(this.fetch.paint)
+              this.drawListener(this.conditionDraw)
+              
               /**LISTENER PARA SUBIR EL DIBUJO */
               document.getElementById('save-panting').addEventListener('click', async () => {
 
@@ -141,7 +148,20 @@ export class AppController {
                 /**creamos un formdata para almacenar los datos a enviar */
                 const user = JSON.parse(localStorage.getItem('user'))
                 const formData = new FormData()
-                formData.append('IdDibujo', this.fetch.paint[0].IdDibujo)
+
+                if(this.paintSelected == 'libre'){
+                  formData.append('IdDibujo', 'libre')
+                  var cuerpoCoins = {
+                    IdUser: this.user.IdUser,
+                    Coins: this.user.Coins + 50
+                  }
+                }else{
+                  formData.append('IdDibujo', this.fetch.paint[0].IdDibujo)
+                  var cuerpoCoins = {
+                    IdUser: this.user.IdUser,
+                    Coins: this.user.Coins + 200
+                  }
+                }
                 formData.append('NombreDibujo', this.fetch.paint[0].Tipo)
                 formData.append('IdUser', user.IdUser)
                 formData.append('MyFile', img.src)
@@ -152,10 +172,7 @@ export class AppController {
 
                 await this.fetch.responseConversation(cuerpo)
 
-                var cuerpoCoins = {
-                  IdUser: this.user.IdUser,
-                  Coins: this.user.Coins + 200
-                }
+               
 
                 this.user.Coins = cuerpoCoins.Coins
                 this.changeShowCoins(this.user.Coins)
@@ -164,8 +181,8 @@ export class AppController {
               })
 
 
-            }, 1500);
-
+            }, 1500)
+            // 
             document.querySelector(".menu").style.display = "none";
             break;
           case "conversationUI":
@@ -263,6 +280,26 @@ export class AppController {
     // this.listener.bind(this);
   }
 
+  drawListener(condition){
+
+      if(condition){
+      this.conditionDraw = false
+      document.getElementById('button-draw-selected').addEventListener('click',(e)=>{
+      this.paintSelected = e.target.textContent
+      console.log(this.paintSelected)
+      var node = document.querySelector('.popup')
+      node.parentNode.removeChild(node)
+    })
+    document.getElementById('button-libre').addEventListener('click',(e)=>{
+      this.paintSelected = e.target.textContent
+      var node = document.querySelector('.popup')
+      console.log(this.paintSelected)
+      node.parentNode.removeChild(node)
+    })
+
+
+  }
+  }
   drawLogic(i) {
     this.#viewUI.drawLogic("conversation", "", this.fetch.test[i], false);
   }
@@ -299,7 +336,7 @@ export class AppController {
     this.loader.load(
       element,
       (glb) => {
-        this.houseEnviorment = glb.scene.children[1]; // Array of two (object and mesh). You need to get the mesh
+        // this.houseEnviorment = glb.scene.children[1]; // Array of two (object and mesh). You need to get the mesh
         this.houseEnviorment = glb.scene;
         this.houseEnviorment.position.set(paramX, paramY, paramZ)
         this.#scene.add(this.houseEnviorment);
