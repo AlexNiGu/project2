@@ -131,7 +131,7 @@ export class ViewUI {
         break
 
       case "shop":
-        // var image = new Image();
+       
         myView = `
                     <div class="shop">
                     <header class="flex shop-header">
@@ -159,7 +159,7 @@ export class ViewUI {
                     </div>
                 </header>
                         <main>
-                            <ul class="grid-shop">
+                            <ul class="grid-shop" id="grid-shop">
                             
                             </ul>
                         </main>
@@ -318,292 +318,11 @@ export class ViewUI {
   }
 
 
-  // drawLogic(logicExpresion, duck = '', data = '', bol = false) {
-  //   switch (logicExpresion) {
-  //     case "draw":
-  //       var draw = document.querySelector(".draw");
-  //       var menu = document.querySelector(".menu");
-  //       setTimeout(() => {
-  //         draw.style.opacity = 1;
-  //       }, 500);
-  //       document.querySelector(".close").addEventListener("click", () => {
-  //         draw.style.opacity = 0;
-  //         setTimeout(() => {
-  //           draw.remove();
-  //           this.anim.playAnimationDefault();
-  //         }, 500);
-
-  //         menu.style.display = "flex";
-  //         menu.style.opacity = 1;
-  //       });
-  //       const canvas = document.getElementById("canvas");
-  //       const ctx = canvas.getContext("2d");
-  //       const color = document.getElementById("color");
-  //       const line = document.getElementById("lineWidth");
-  //       const clear = document.getElementById("clear");
-
-  //       const canvasOffsetX = canvas.offsetLeft;
-  //       const canvasOffsetY = canvas.offsetTop;
-
-  //       canvas.width = window.innerWidth - canvasOffsetX;
-  //       canvas.height = window.innerHeight - canvasOffsetY;
-
-  //       let paint = false;
-  //       let lineWidth = 5;
-
-  //       ctx.fillStyle = "white";
-  //       ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  //       clear.addEventListener("click", (e) => {
-  //         if (e.target.id === "clear") {
-  //           ctx.clearRect(0, 0, canvas.width, canvas.height);
-  //         }
-  //         ctx.fillStyle = "white";
-  //         ctx.fillRect(0, 0, canvas.width, canvas.height);
-  //       });
-
-  //       color.addEventListener("click", (e) => {
-  //         if (e.target.id === "stroke") {
-  //           ctx.strokeStyle = e.target.value;
-  //         }
-  //       });
-  //       line.addEventListener("click", (e) => {
-  //         if (e.target.id === "lineWidth") {
-  //           lineWidth = e.target.value;
-  //         }
-  //       });
-
-  //       canvas.addEventListener("mousedown", (e) => {
-  //         paint = false;
-  //         ctx.beginPath();
-  //         ctx.moveTo(e.clientX, e.clientY);
-  //       });
-
-  //       canvas.addEventListener("mouseup", () => {
-  //         paint = true;
-  //       });
-
-  //       canvas.addEventListener("mousemove", (e) => {
-  //         if (paint == false) {
-  //           ctx.lineCap = "round";
-  //           ctx.lineWidth = `${line.value}`;
-  //           ctx.strokeStyle = `${color.value}`;
-
-  //           ctx.lineTo(e.clientX - canvasOffsetX, e.clientY);
-  //           ctx.stroke();
-  //         }
-  //       });
-  //       break;
-  //     case 'play':
-  //       var menograma = document.querySelector(".memograma");
-  //       var menu = document.querySelector(".menu");
-  //       setTimeout(() => {
-  //         menograma.style.opacity = 1;
-  //       }, 500);
-  //       document.querySelector(".close").addEventListener("click", () => {
-  //         menograma.style.opacity = 0;
-  //         setTimeout(() => {
-  //           menograma.remove();
-  //           // this.anim.playAnimationDefault();
-  //         }, 500);
-
-  //         menu.style.display = "flex";
-  //         menu.style.opacity = 1;
-  //       });
-  //       var imgCover = new Image();
-  //       var img1 = new Image();
-  //       var img2 = new Image();
-  //       var img3 = new Image();
-  //       var img4 = new Image();
-  //       var img5 = new Image();
-  //       var img6 = new Image();
-  //       var img7 = new Image();
-  //       var img8 = new Image();
-
-  //       imgCover.src= require('../../assets/img/doodad.jpg');
-  //       img1.src= require('../../assets/img/1.jpg');
-  //       img2.src= require('../../assets/img/2.jpg');
-  //       img3.src= require('../../assets/img/3.jpg');
-  //       img4.src= require('../../assets/img/4.jpg');
-  //       img5.src= require('../../assets/img/5.jpg');
-  //       img6.src= require('../../assets//img/6.jpg');
-  //       img7.src= require('../../assets/img/7.jpg');
-  //       img8.src= require('../../assets/img/8.jpg');
-
-  //       var json = [
-  //         {
-  //             "src": img1.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img1.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img2.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img2.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img3.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img3.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img4.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img4.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img5.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img5.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img6.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img6.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img7.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img7.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img8.src,
-  //             "default" : imgCover.src
-  //         },
-  //         {
-  //             "src": img8.src,
-  //             "default" : imgCover.src
-  //         }
-  //       ]
-
-
-  //       new Memorama(json);
-
-  //       break;
-  //     case "shop":
-  //       if (!bol) {
-  //         this.appendReward(data)
-  //         bol = true
-  //       }
-  //       var shop = document.querySelector(".shop");
-  //       var menu = document.querySelector(".menu");
-  //       menu.style.opacity = 0;
-  //       setTimeout(() => {
-  //         shop.style.opacity = 1;
-  //       }, 500);
-
-  //       document.querySelector(".close").addEventListener("click", () => {
-  //         shop.style.opacity = 0;
-  //         setTimeout(() => {
-  //           shop.remove();
-  //         }, 500);
-  //         menu.style.display = "flex";
-  //         menu.style.opacity = 1;
-  //         this.anim.playAnimationDefault();
-  //         this.duckAnim.playAnimationDefault(duck);
-  //       });
-  //       break;
-  //     case 'conversation':
-        
-  //     var menograma = document.querySelector(".conversation");
-  //       var menu = document.querySelector(".menu");
-  //       setTimeout(() => {
-  //         menograma.style.opacity = 1;
-  //       }, 500);
-  //       document.querySelector(".close").addEventListener("click", () => {
-  //         menograma.style.opacity = 0;
-  //         setTimeout(() => {
-  //           menograma.remove();
-  //           // this.anim.playAnimationDefault();
-  //         }, 500);
-
-  //         menu.style.display = "flex";
-  //         menu.style.opacity = 1;
-  //       });
-
-  //       if (!bol) {
-  //         // console.log(data)
-  //         document.querySelector('.text-question').innerHTML = data.pregunta;
-  //         document.querySelector('.answer').innerHTML = ''
-  //         var i = 1
-  //         Object.entries(data).forEach(([key, value]) => {
-
-  //           if (key == `respuesta${i}` && value != '') {
-  //             let myLi = document.createElement('li');
-  //             myLi.setAttribute('class', 'li-answer center')
-  //             myLi.setAttribute('data-index-number', i)
-  //             myLi.innerText = value;
-  //             document.querySelector('.answer').appendChild(myLi);
-  //             i++
-  //           }
-  //           // console.log(i)
-  //         });
-
-  //         bol = true;
-        
-  //       }
-
-  //     ////////////////////////////////////////////////////////////////////////////////////
-  //     //     const text = document.querySelector('.anim');
-  //     //     const strText = text.textContent; // it's the value of the h1 text element
-  //     //     // console.log(strText);
-
-  //     //     // To do a good animation what we can do is split the string into an array
-  //     //     const splitText = strText.split("");
-  //     //     // console.log(splitText);
-  //     //     text.textContent = "";
-
-  //     //     for (let i=0; i < splitText.length; ++i) {
-
-  //     //         splitText[i] == " " ? text.innerHTML += "<span>" + '&nbsp;' + "<pan>":         text.innerHTML += "<span>" + splitText[i] + "<pan>";
-
-  //     //     }
-
-  //     //     let char = 0;
-  //     //     let timer = setInterval(onTick, 50);
-
-  //     //     function onTick() {
-  //     //         const span = text.querySelectorAll('span')[char];
-  //     //         span.classList.add('fade');
-  //     //         char++;
-  //     //         if (char === splitText.length) {
-  //     //             complete();
-  //     //             return;
-  //     //         }
-  //     //     }
-
-  //     //     function complete() {
-  //     //         clearInterval(timer);
-  //     //         timer = null;
-  //     //     }
-  //     //     break;
-  //   }
-
-  // }
+ 
  renderPopUp(i=0){
 
-  const popUp =`<div class="popup" id="popup">
+  const popUp =` <div class="overlay"></div>
+  <div class="popup" id="popup">
   <div class="imagen-popup" id="imagen-popup">
   <button id="button-iz-popup" class="button-iz-popup"> izquierda </button>
   <button id="button-der-popup" class="button-der-popup"> derecha </button> 
@@ -618,60 +337,19 @@ export class ViewUI {
   document.querySelector('.shop').innerHTML += popUp
   }
 
-  // listennersPopUp(){
-
-  //   document.getElementById("button-der-popup").addEventListener('click',()=>{
-
-  //     let node = document.getElementById("image-selected")
-  //     node.parentElement.removeChild(node)
-
-  //     if(this.data.length != 0){
-
-  //       if(this.i < this.data.length -1){
-
-  //         this.i++
-
-  //       }else{
-  //         this.i = 0
-  //       }
-  //       console.log(this.i)
-  //       document.getElementById('imagen-popup').innerHTML += `<img src="${this.data[this.i].URL_Dibujo}" id="image-selected"></img>`
-  //       this.listennersPopUp()
-  //     }
-
-  //   })
-
-  //   document.getElementById("button-iz-popup").addEventListener('click',()=>{
-
-  //     let node = document.getElementById("image-selected")
-  //     node.parentElement.removeChild(node)
-
-  //     if(this.data.length != 0){
-
-  //       if(this.i > 0){
-  //         this.i--
-  //       }else{
-  //         this.i = this.data.length -1
-  //       }
-  //       console.log(this.i)
-  //       document.getElementById('imagen-popup').innerHTML += `<img src="${this.data[this.i].URL_Dibujo}" id="image-selected"></img>`
-  //       this.listennersPopUp()
-  //     }
-      
-  //   })
-  // }
-
   renderPopUpDraw(data){
-    const popDraw = `<div class="popup" id="popup">
+    const popDraw = `
+    <div class="overlay"></div>
+    <div class="popup" id="popup">
+
     <div class="imagen-popup" id="imagen-popup">
   <button id="button-draw-selected" class="button-iz-popup"> ${data[0].Tipo}</button>
-  <p>200 peces!</p>
+  <p class="parrafo1">200 peces! &#8594</p>
   
   <button id="button-libre" class="button-der-popup"> Libre </button> 
-  <p>50 peces!</p>
+  <p class="parrafo2">50 peces! &#8594</p>
   </div>
-  </div>
-    </div>`
+  </div>`
 
     document.querySelector('.draw').innerHTML += popDraw
   }

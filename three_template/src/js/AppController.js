@@ -8,7 +8,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 import { CameraAnimation } from "./modules/CameraAnimation.js";
 import { Fetch } from "./modules/Fetch.js";
-import {Audios} from "./modules/Audio"
+import { Audios } from "./modules/Audio"
 import { Memorama } from "./modules/memorama";
 
 export class AppController {
@@ -137,14 +137,12 @@ export class AppController {
 
             setTimeout(async () => {
               this.view = this.#viewUI.render("draw");
-              this.drawLogic("draw", this.duck);
-              
-
               /**FETCH PARA SABER QUE DIBUJO ES */
               await this.fetch.fetchGetPaiting()
               this.#viewUI.renderPopUpDraw(this.fetch.paint)
               this.drawListener()
-              
+
+              this.drawLogic("draw", this.duck);
               /**LISTENER PARA SUBIR EL DIBUJO */
               document.getElementById('save-panting').addEventListener('click', async () => {
 
@@ -157,13 +155,13 @@ export class AppController {
                 const user = JSON.parse(localStorage.getItem('user'))
                 const formData = new FormData()
 
-                if(this.paintSelected == 'libre'){
+                if (this.paintSelected == 'libre') {
                   formData.append('IdDibujo', 'libre')
                   var cuerpoCoins = {
                     IdUser: this.user.IdUser,
                     Coins: this.user.Coins + 50
                   }
-                }else{
+                } else {
                   formData.append('IdDibujo', this.fetch.paint[0].IdDibujo)
                   var cuerpoCoins = {
                     IdUser: this.user.IdUser,
@@ -206,40 +204,46 @@ export class AppController {
             document.querySelector(".menu").style.display = "none";
 
             setTimeout(async () => {
-              console.log('toy aqui')
+
               await this.fetch.fetchGetConversation();
 
               this.user = await JSON.parse(localStorage.getItem('user'))
 
-              cuerpo.IdTest = this.fetch.test[0].IdTest
-              cuerpo.Numtest = this.user.Numtest + 1
-              // console.log(this.fetch.test)
-              this.#viewUI.render("conversation");
-              var i = 0
-              this.drawLogic("conversation", "", this.fetch.test[i], false)
+              if (this.fetch.test != null) {
 
-              document.querySelector(".answer").addEventListener('click',async (e) => {
-                i++
-                if (i <= 5) {
-                  // console.log(i)
-                  cuerpo[`Respuesta${i}`] = parseInt(e.target.dataset.indexNumber)
-                  this.drawLogic(i)
-                }
-                if (i == 5) {
 
-                  await this.fetch.responseConversation(cuerpo)
 
-                  var cuerpoCoins = {
-                    IdUser: this.user.IdUser,
-                    Coins: this.user.Coins + 300
+                cuerpo.IdTest = this.fetch.test[0].IdTest
+                cuerpo.Numtest = this.user.Numtest + 1
+                // console.log(this.fetch.test)
+                this.#viewUI.render("conversation");
+                var i = 0
+                this.drawLogic("conversation", "", this.fetch.test[i], false)
+
+                document.querySelector(".answer").addEventListener('click', async (e) => {
+                  i++
+                  console.log(i)
+                  if (i <= 5) {
+                    // console.log(i)
+                    cuerpo[`Respuesta${i}`] = parseInt(e.target.dataset.indexNumber)
+                    this.drawLogic("conversation", "", this.fetch.test[i], false)
                   }
+                  if (i == 5) {
 
-                  this.user.Coins = cuerpoCoins.Coins
-                  this.changeShowCoins(this.user.Coins)
-                  await this.fetch.fetchCoins(cuerpoCoins)
+                    await this.fetch.responseConversation(cuerpo)
 
-                }
-              })
+                    var cuerpoCoins = {
+                      IdUser: this.user.IdUser,
+                      Coins: this.user.Coins + 300
+                    }
+
+                    this.user.Coins = cuerpoCoins.Coins
+                    this.changeShowCoins(this.user.Coins)
+                    await this.fetch.fetchCoins(cuerpoCoins)
+
+                  }
+                })
+              }
             }, 1500);
 
             break;
@@ -247,25 +251,23 @@ export class AppController {
             this.#ducktor.playAnimationShop();
             this.cameraAnimation.playAnimationShop();
             this.audio.playShopMusic()
-            setTimeout(async () => {
-              await this.fetch.getFurnitures()
+            this.view = this.#viewUI.render("shop");
 
+            this.fetch.getFurnitures().then(() => {
+              this.#viewUI.appendReward(this.fetch.shopFornitures)
+              this.listenerElementsShop()
+              this.listenerShopMenu()
+            })
 
-              this.view = this.#viewUI.render("shop");
-              this.drawLogic("shop", this.duck, this.fetch.shopFornitures, false);
-
-              this.listenerShop()
-
-            }, 1500);
 
             document.querySelector(".menu").style.display = "none";
 
             break;
           case "gameUI":
-            
+
             this.audio.playGameMusic()
             setTimeout(async () => {
-              
+
               this.#viewUI.render("play");
               this.drawLogic("play");
             }, 1500);
@@ -283,22 +285,24 @@ export class AppController {
     // this.listener.bind(this);
   }
 
-  drawListener(){
-      document.getElementById('button-draw-selected').addEventListener('click',(e)=>{
+  drawListener() {
+    document.getElementById('button-draw-selected').addEventListener('click', (e) => {
       this.paintSelected = e.target.textContent
       console.log(this.fetch.paint)
       var node = document.querySelector('.popup')
       node.parentNode.removeChild(node)
+      document.querySelector('.overlay').style.display = 'none'
     })
-    document.getElementById('button-libre').addEventListener('click',(e)=>{
+    document.getElementById('button-libre').addEventListener('click', (e) => {
       this.paintSelected = e.target.textContent
       var node = document.querySelector('.popup')
       console.log(this.paintSelected)
       node.parentNode.removeChild(node)
+      document.querySelector('.overlay').style.display = 'none'
     })
 
 
-  
+
   }
 
   listener2() {
@@ -315,6 +319,8 @@ export class AppController {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+  /**CARGAR ELEMENTOS_--------------------------------------------------------------------------------- */
   loadSingularElement(element, paramX = 0, paramY = 0, paramZ = 0, RotationX = 0, RotationY = 0) {
     var model
     this.loader = new GLTFLoader();
@@ -339,18 +345,18 @@ export class AppController {
         this.houseEnviorment.position.set(paramX, paramY, paramZ)
 
 
-        this.houseEnviorment.traverse(function(node) {
+        this.houseEnviorment.traverse(function (node) {
           if (node.isMesh) node.castShadow = true;
         })
         this.#scene.add(this.houseEnviorment);
         console.log(this.houseEnviorment)
       },
-      (xhr)=> {
+      (xhr) => {
         console.log((xhr.loaded / xhr.total) * 100 + ' soy la casa')
         if ((xhr.loaded / xhr.total) * 100 === 100) {
-          setTimeout(()=> {
+          setTimeout(() => {
             document.getElementById('charging-page').classList.add('vanish')
-            setTimeout(()=> {
+            setTimeout(() => {
               this.audio.playAmbientMusic()
               let node = document.getElementById('charging-page')
               node.parentNode.removeChild(node)
@@ -382,7 +388,7 @@ export class AppController {
           const action = mixer.clipAction(clip);
           action.play();
           action.timeScale = 0.5;
-        });7
+        }); 7
 
         this.mixer = mixer;
         this.#ducktor.playAnimationDefault(this.duck);
@@ -437,6 +443,7 @@ export class AppController {
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+  /**LOGICA DE LA TIENDA--------------------------------------------------------------------- */
   async logicShop(urlIntegrado) {
 
     var cuerpoCoins = {
@@ -478,11 +485,11 @@ export class AppController {
     )
   }
 
-  /**LISTENER PARA LA TIENDA */
+  /**LISTENERS PARA LA TIENDA---------------------------------------------------------------- */
 
-  listenerShop() {
+  listenerElementsShop() {
 
-    document.querySelector('.grid-shop').addEventListener('click', async (e) => {
+    document.getElementById('grid-shop').addEventListener('click', async (e) => {
       if (e.target.nodeName == 'IMG' || e.target.nodeName == 'DIV') {
         e.target.parentElement.click()
       } else if (e.target.nodeName == 'LI') {
@@ -494,15 +501,26 @@ export class AppController {
           if (this.fetch.shopFornitures[this.indexNumber].Name == 'Cuadro') {
 
             await this.fetch.getPersonalPaints()
-            console.log('es el cuadro')
+
             this.#viewUI.data = this.fetch.personalPaints
             this.#viewUI.renderPopUp()
-            this.#viewUI.listennersPopUp()
+            this.listennersPopUp()
 
             document.getElementById('popup-aceptar').addEventListener('click', () => {
-            const url = document.getElementById('image-selected').src
+              const url = document.getElementById('image-selected').src
 
               this.logicShop(url)
+
+            })
+
+            document.getElementById('popup-cancelar').addEventListener('click', () => {
+              const url = document.getElementById('image-selected').src
+
+
+              var node = document.querySelector('.popup')
+              node.parentElement.removeChild(node)
+              this.listenerShopMenu()
+              // this.logicShop(url)
 
             })
 
@@ -521,7 +539,30 @@ export class AppController {
     })
   }
 
+  listenerShopMenu() {
+    var shop = document.querySelector(".shop");
+    var menu = document.querySelector(".menu");
+    menu.style.opacity = 0;
+    setTimeout(() => {
+      shop.style.opacity = 1;
+    }, 500);
 
+    document.querySelector(".close").addEventListener("click", () => {
+      this.audio.stopMusic()
+      shop.style.opacity = 0;
+      setTimeout(() => {
+        shop.remove();
+        this.audio.playAmbientMusic()
+      }, 500);
+      menu.style.display = "flex";
+      menu.style.opacity = 1;
+      this.cameraAnimation.playAnimationDefault();
+      this.#ducktor.playAnimationDefault(this.duck);
+    });
+  }
+
+
+  /**------------------- COINS */
   changeShowCoins(data) {
     document.getElementById('show-coins').innerText = data
   }
@@ -529,7 +570,7 @@ export class AppController {
 
 
 
-/**----------DRAW UI LISTENNERS----AND LOGIC */
+  /**----------DRAW UI LISTENNERS----AND LOGIC */
 
   drawLogic(logicExpresion, duck = '', data = '', bol = false) {
     switch (logicExpresion) {
@@ -540,10 +581,11 @@ export class AppController {
           draw.style.opacity = 1;
         }, 500);
         document.querySelector(".close").addEventListener("click", () => {
+          console.log('yep')
           draw.style.opacity = 0;
           setTimeout(() => {
             draw.remove();
-            
+
             this.cameraAnimation.playAnimationDefault();
           }, 500);
 
@@ -636,15 +678,30 @@ export class AppController {
         var img7 = new Image();
         var img8 = new Image();
 
+
         imgCover.src = require('../assets/img/doodad.jpg');
-        img1.src = require('../assets/img/1.jpg');
-        img2.src = require('../assets/img/2.jpg');
-        img3.src = require('../assets/img/3.jpg');
-        img4.src = require('../assets/img/4.jpg');
-        img5.src = require('../assets/img/5.jpg');
-        img6.src = require('../assets//img/6.jpg');
-        img7.src = require('../assets/img/7.jpg');
-        img8.src = require('../assets/img/8.jpg');
+
+        if (this.user.Edad >= 5 && this.user.Edad <= 8) {
+          img1.src = require('../assets/img/gameA/1.jpg');
+          img2.src = require('../assets/img/gameA/2.jpg');
+          img3.src = require('../assets/img/gameA/3.jpg');
+          img4.src = require('../assets/img/gameA/4.jpg');
+          img5.src = require('../assets/img/gameA/5.jpg');
+          img6.src = require('../assets/img/gameA/6.jpg');
+          img7.src = require('../assets/img/gameA/7.jpg');
+          img8.src = require('../assets/img/gameA/8.jpg');
+        } else {
+          img1.src = require('../assets/img/gameB/1.jpg');
+          img2.src = require('../assets/img/gameB/2.jpg');
+          img3.src = require('../assets/img/gameB/3.jpg');
+          img4.src = require('../assets/img/gameB/4.jpg');
+          img5.src = require('../assets/img/gameB/5.jpg');
+          img6.src = require('../assets/img/gameB/6.jpg');
+          img7.src = require('../assets/img/gameB/7.jpg');
+          img8.src = require('../assets/img/gameB/8.jpg');
+        }
+
+
 
         var json = [
           {
@@ -717,31 +774,6 @@ export class AppController {
         new Memorama(json);
 
         break;
-      case "shop":
-        if (!bol) {
-          this.#viewUI.appendReward(data)
-          bol = true
-        }
-        var shop = document.querySelector(".shop");
-        var menu = document.querySelector(".menu");
-        menu.style.opacity = 0;
-        setTimeout(() => {
-          shop.style.opacity = 1;
-        }, 500);
-
-        document.querySelector(".close").addEventListener("click", () => {
-          this.audio.stopMusic()
-          shop.style.opacity = 0;
-          setTimeout(() => {
-            shop.remove();
-            this.audio.playAmbientMusic()
-          }, 500);
-          menu.style.display = "flex";
-          menu.style.opacity = 1;
-          this.cameraAnimation.playAnimationDefault();
-          this.#ducktor.playAnimationDefault(duck);
-        });
-        break;
       case 'conversation':
 
         var menograma = document.querySelector(".conversation");
@@ -792,9 +824,9 @@ export class AppController {
       let node = document.getElementById("image-selected")
       node.parentElement.removeChild(node)
 
-      if (this.data.length != 0) {
+      if (this.fetch.personalPaints.length != 0) {
 
-        if (this.i < this.data.length - 1) {
+        if (this.i < this.fetch.personalPaints.length - 1) {
 
           this.i++
 
@@ -802,26 +834,26 @@ export class AppController {
           this.i = 0
         }
         console.log(this.i)
-        document.getElementById('imagen-popup').innerHTML += `<img src="${this.data[this.i].URL_Dibujo}" id="image-selected"></img>`
+        document.getElementById('imagen-popup').innerHTML += `<img src="${this.fetch.personalPaints[this.i].URL_Dibujo}" id="image-selected"></img>`
         this.listennersPopUp()
       }
 
     })
-
-    document.getElementById("button-iz-popup").addEventListener('click', () => {
+    const bottonIZ = document.getElementById("button-iz-popup")
+    bottonIZ.addEventListener('click', () => {
 
       let node = document.getElementById("image-selected")
       node.parentElement.removeChild(node)
 
-      if (this.data.length != 0) {
+      if (this.fetch.personalPaints.length != 0) {
 
         if (this.i > 0) {
           this.i--
         } else {
-          this.i = this.data.length - 1
+          this.i = this.fetch.personalPaints.length - 1
         }
         console.log(this.i)
-        document.getElementById('imagen-popup').innerHTML += `<img src="${this.data[this.i].URL_Dibujo}" id="image-selected"></img>`
+        document.getElementById('imagen-popup').innerHTML += `<img src="${this.fetch.personalPaints[this.i].URL_Dibujo}" id="image-selected"></img>`
         this.listennersPopUp()
       }
 

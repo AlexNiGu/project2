@@ -1,12 +1,41 @@
 .popup{
     position: absolute;
     display: flex;
+
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF1 100%);
+    border-bottom: 18px solid #59BCAA!important;
+    border-radius: 35px;
+    padding: 3em 6em 0 6em;
+    margin: 2em 5em 0 5em;
+    position: absolute;
+    width: 90%;
+    top: 155x;
+    left: 325px;
+    border: 0;
     flex-direction: column;
     width: 50%;
     height: 60%;
     background-color: blue;
     z-index: 1000;
-    top: 0;
+    top: 250px;
+}
+
+    /* .popup::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        opacity: .8;
+    } */
+
+.popup::after {
+    z-index: 1;
+}
+.popup > * {
+    z-index: 100;
 }
 
 .imagen-popup{
@@ -15,15 +44,116 @@
     background-color: aliceblue
 }
 
-.button-iz-popup{
-    top: 50%;
-    left: 0%;
+.parrafo1 {
     position: absolute;
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 45px;
+    line-height: 89px;
+    /* identical to box height */
+    
+    letter-spacing: 0.025em;
+    
+    color: #444444;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    /* color: #2FABF7; */
+    top: 186px;
+    left: 108px;
+    position:absolute;  
+}
+
+.overlay {
+    position: fixed; /* Sit on top of the page content */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+}
+
+.parrafo2 {
+    letter-spacing: .025em;
+    color: #444;
+    justify-content: center;
+    align-items: center;
+    font-family: Fredoka;
+    font-size: 45px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 89px;
+    display: flex;
+    position: absolute;
+    top: 74px;
+    left: 114px;
+}
+
+.button-iz-popup{
+    /* top: 50%;
+    left: 0%; */
+    position: absolute;
+    background: linear-gradient(180deg, #FFFFFF 0%, #E0F1FF 100%);
+    border-radius: 34px;
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 138.5%;
+    /* or 33px */
+
+    /* display: flex;
+    align-items: center;
+    text-align: center; */
+    letter-spacing: 0.025em;
+    border:0;
+    border-bottom: 8px solid #79A5C7!important;
+    width: 160px;
+    height: 66px;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    color: #2FABF7;
+    top: 202px;
+    left: 416px;
+    position:absolute;
 }
 
 .button-der-popup{
-    top: 50%;
-    right: 0%;
     position: absolute;
-    
+    background: linear-gradient(180deg, #FFFFFF 0%, #E0F1FF 100%);
+    border-radius: 34px;
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 138.5%;
+    /* or 33px */
+
+    /* display: flex;
+    align-items: center;
+    text-align: center; */
+    letter-spacing: 0.025em;
+    border:0;
+    border-bottom: 8px solid #79A5C7!important;
+    width: 160px;
+    height: 66px;
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    color: #2FABF7;
+    top: 91px;
+    left: 416px;
+    position:absolute;
+}
+
+
+.button-der-popup:hover, .button-iz-popup:hover {
+    animation: headShake;
+    animation-duration: 2s;
 }
