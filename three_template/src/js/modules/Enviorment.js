@@ -25,7 +25,8 @@ export class Enviorment {
     // Render the scece in the element that you want. In our case is a canvas
     this.renderer = new THREE.WebGLRenderer({
       canvas: document.querySelector("#bg"),
-      antialias: true
+      antialias: true,
+      alpha: true
     });
     // configuration of pixelRatio and size
     this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -34,14 +35,15 @@ export class Enviorment {
     this.renderer.outputEncoding = THREE.sRGBEncoding;
     this.renderer.gammaOutput = true;
     this.renderer.gammaFactor = 2.2;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     // Controls to move in the scene
-    this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+    // this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 
     // pointLightHelper to know where is the light source
     this.gridHelper = new THREE.GridHelper(200, 50);
     this.axisHelper = new THREE.AxesHelper(20);
-    // this.scene.add( this.gridHelper, this.axisHelper );
+    this.scene.add( this.gridHelper, this.axisHelper );
 
     this.scene.background = new THREE.Color(0xdddddd);
 
@@ -50,7 +52,7 @@ export class Enviorment {
     this.hlight = new THREE.AmbientLight(0xffffff, 1);
     this.scene.add(this.hlight);
 
-    this.directionalLight = new THREE.DirectionalLight(0x0000ff, 5);
+    this.directionalLight = new THREE.DirectionalLight(0x000000, 5);
     this.directionalLight.position.set(5, 7, 10);
     this.directionalLight.shadow.camera.far = 20;
     this.directionalLight.shadow.mapSize.set(1024,1024);
@@ -58,23 +60,24 @@ export class Enviorment {
     this.directionalLight.castShadow = true;
     this.scene.add(this.directionalLight);
 
-    const pointLightHelper = new THREE.PointLightHelper(this.directionalLight,1);
-    this.scene.add(pointLightHelper);
-    // this.light = new THREE.PointLight(0x0f0f0f, 1);
-    // this.light.position.set(0, 100, -200);
+    // this.light = new THREE.PointLight(0x0f0f0f, 10);
+    // this.light.position.set(0, 5, 0);
     // this.scene.add(this.light);
 
-    // this.light2 = new THREE.PointLight(0x0f0f0f, 1);
-    // this.light2.position.set(500, 100, 0);
+    // this.light2 = new THREE.PointLight(0x0f0f0f, 10);
+    // this.light2.position.set(0, 5, 0);
     // this.scene.add(this.light2);
 
-    // this.light3 = new THREE.PointLight(0x111111, 1);
-    // this.light3.position.set(50, 100, -200);
+    // this.light3 = new THREE.PointLight(0x111111, 10);
+    // this.light3.position.set(0, 5, 0);
     // this.scene.add(this.light3);
 
-    // this.light4 = new THREE.PointLight(0x0f0f0f, 1);
-    // this.light4.position.set(-50, 100, -200);
+    // this.light4 = new THREE.PointLight(0x0f0f0f, 10);
+    // this.light4.position.set(0, 5, 0);
     // this.scene.add(this.light4);
+
+    const pointLightHelper = new THREE.PointLightHelper(this.directionalLight,1);
+    this.scene.add(pointLightHelper);
   }
 
   getScene() {

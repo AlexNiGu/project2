@@ -1,3 +1,6 @@
+var imgCover = new Image();
+imgCover.src= require('../../assets/img/doodad.jpg');
+
 export class Memorama {
     constructor(json) {
       /**Propiedades  */

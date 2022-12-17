@@ -86,7 +86,7 @@ export class AppController {
     // keyControls.resetHover(this.#scene);
     // keyControls.hoverPiece(this.#scene, this.#camera);
     // this.#myKeyControls.hoverPiece();
-    this.#controls.update();
+    // this.#controls.update();
 
     // This is for the animations of the character
     if (this.duck) {
@@ -171,15 +171,11 @@ export class AppController {
                 await this.fetch.fetchSavePainting(formData)
 
                 await this.fetch.responseConversation(cuerpo)
-
-               
-
                 this.user.Coins = cuerpoCoins.Coins
                 this.changeShowCoins(this.user.Coins)
                 await this.fetch.fetchCoins(cuerpoCoins)
 
               })
-
 
             }, 1500)
             // 
@@ -268,7 +264,6 @@ export class AppController {
             this.#ducktor.playAnimationGame();
             this.cameraAnimation.playAnimationConversation();
             document.querySelector(".menu").style.display = "none";
-
             break;
         }
       } else {
@@ -339,7 +334,13 @@ export class AppController {
         // this.houseEnviorment = glb.scene.children[1]; // Array of two (object and mesh). You need to get the mesh
         this.houseEnviorment = glb.scene;
         this.houseEnviorment.position.set(paramX, paramY, paramZ)
+
+
+        this.houseEnviorment.traverse(function(node) {
+          if (node.isMesh) node.castShadow = true;
+        })
         this.#scene.add(this.houseEnviorment);
+        console.log(this.houseEnviorment)
       },
       function (xhr) {
         console.log((xhr.loaded / xhr.total) * 100 + ' soy la casa')

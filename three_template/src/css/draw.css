@@ -1,85 +1,84 @@
 .draw {
-    /* position: absolute; */
-    padding: 2em;
-    margin: 0em 7em 0 7em;
-    font-family: 'Fredoka', sans-serif;
-    background-color: var(--bg-color);
-    background:
-    linear-gradient(324deg, #e3d7bf 4%,   transparent 4%) -70px 43px,
-    linear-gradient( 36deg, #e3d7bf 4%,   transparent 4%) 30px 43px,
-    linear-gradient( 72deg, #e3d7bf 8.5%, transparent 8.5%) 30px 43px,
-    linear-gradient(288deg, #e3d7bf 8.5%, transparent 8.5%) -70px 43px,
-    linear-gradient(216deg, #e3d7bf 7.5%, transparent 7.5%) -70px 23px,
-    linear-gradient(144deg, #e3d7bf 7.5%, transparent 7.5%) 30px 23px,
-    
-    linear-gradient(324deg, #e3d7bf 4%,   transparent 4%) -20px 93px,
-    linear-gradient( 36deg, #e3d7bf 4%,   transparent 4%) 80px 93px,
-    linear-gradient( 72deg, #e3d7bf 8.5%, transparent 8.5%) 80px 93px,
-    linear-gradient(288deg, #e3d7bf 8.5%, transparent 8.5%) -20px 93px,
-    linear-gradient(216deg, #e3d7bf 7.5%, transparent 7.5%) -20px 73px,
-    linear-gradient(144deg, #e3d7bf 7.5%, transparent 7.5%) 80px 73px;
-    background-size: 100px 100px;
-    opacity: 0;
-    transition: 0.5s;
-    /* width: 100%; */
-    height: 100vh;
-}
-.canvas {
-    border: 5px solid var(--green-color);
-    border-radius: 0px 25px 25px 0px;
-    /* position: fixed; */
-    min-width: 1300px;
-    height: 770px;
-}
-
-.container {
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF1 100%);
+    border-bottom: 18px solid #59BCAA;
+    border-radius: 35px;
+    padding: 3em 6em 0 6em;
+    margin: 2em 5em 0 5em;
     position: absolute;
-    margin-top: 1em;
-    height: 95%;
-    display: flex;
-}
-
-.inputs-canvas {
-    position: absolute;
-    left: 20%;
-    top: 20%;
-    gap: 1em;
-    /* background-color: var(--text-color); */
-    border: solid 2px var(--green-color);
-    border-radius: 25px;
-    padding: 1em;
-}
-.color-picker {
-    background-color: var(--bg-color);
-    border: 0!important;
-    /* padding: 1em; */
+    width: 90%;
+    height: 700px;
 }
 
 #toolbar {
+    padding: .25em;
+    background-color: #59BCAA;
+    border-radius: 15px;
+}
+#lineWidth {
+    background: #FFFFFF;
+    border-radius: 6px;
+    text-align: center;
+    border:0;
+    background-color: #fbfbfb;
+}
+label {
+    padding: 1em;
+}
+
+#save-panting {
+    background: linear-gradient(180deg, #FFFFFF 0%, #E0F1FF 100%);
+    border-radius: 34px;
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 138.5%;
+    /* or 33px */
+
+    /* display: flex;
+    align-items: center;
+    text-align: center; */
+    letter-spacing: 0.025em;
+    border:0;
+    border-bottom: 8px solid #79A5C7!important;
+    width: 160px;
+    height: 66px;
     display: flex;
-    flex-direction: column;
-    padding: 5px;
-    width: 125px;
-    background-color: var(--green-color);
-    height: 90%;
+    align-items:center;
+    justify-content: center;
+    color: #2FABF7;
+    top: 582px;
+    left: 1155px;
+    position:absolute;
 }
 
-#toolbar * {
-    margin-bottom: 6px;
+#clear {
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFE0E0 100%);
+    border-bottom: 8px solid #C77979!important;
+    border: 0;
+    width: 66px;
+    height: 66px;
+    border-radius: 22px;
+    top: 582px;
+    left: 1064px;
+    position:absolute;
 }
 
-#toolbar label {
-    font-size: 18px;
+#canvas {
+    width: 1251px;
+    height: 443px;
+    background: linear-gradient(180.27deg, #fff -4.65%, #d2ebe6 132.62%);
+    border-radius: 34px;
+    margin-top: 1em;
+    border: 3px solid #59bcaa !important;
 }
 
-#toolbar input {
-    width: 100%;
+#clear:hover {
+    animation: headShake;
+    animation-duration: 2s;
 }
 
-#toolbar button {
-    background-color: #1565c0;
-    border: none;
-    border-radius: 4px;
-    color:white;
-    padding: 2px;
+#save-panting:hover {
+    animation: headShake;
+    animation-duration: 2s;
 }

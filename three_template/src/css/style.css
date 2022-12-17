@@ -7,7 +7,7 @@
 
 body {
     font-family: 'Fredoka', sans-serif;
-    overflow-y: hidden;
+    overflow: hidden;
 
 }
 .bg {
@@ -21,8 +21,30 @@ body {
     padding: 0,;
     margin: 0;
     box-sizing:border-box;
+    /* border: 1px solid black; */
     /* cursor: none; */
 
+}
+
+.close {
+    padding: 0em 1.5em 0em 1.5em;
+    width: 58px;
+    height: 58px;    
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFE0E0 100%);
+    border-bottom: 8px solid #C77979;
+    border-radius: 14px;
+    transition: 0.15s;
+}
+
+.close:hover {
+    animation: heartBeat;
+    animation-duration: 2s;
+}
+
+.center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .flex {
@@ -45,30 +67,12 @@ body {
     border-radius: 34px;
 }
 
-
-button:hover {
-    box-shadow: -8px 8px 0px #36776B;
-    transform: scale(1.05);
+.button-menu:hover {
+    /* box-shadow: -8px 8px 0px #36776B;
+    transform: scale(1.05); */
+    animation: heartBeat;
+    animation-duration: 2s;
 }
-
-button:hover {
-    background: #f1f3f1;
-}
-/* #draw-canvas {
-    background-color: aliceblue;
-    border: 1px solid black;
-    position: fixed;
-    width: 1000px;
-    height: 1000px;
-    z-index: 9;
-
-}
-
-#btndownload {
-    z-index: 10;
-    position: fixed;
-} */
-
 
 /* =======cursor==========0 */
 .cursor {
@@ -88,7 +92,7 @@ button:hover {
     width: 20px;
     height: 20px;
     border-radius: 100%;
-    background-color: yellow;
+    background-color: #79A5C7;
     opacity: .9;
     position: fixed;
     transform: translate(-50%, -50%);
