@@ -9,6 +9,7 @@ import * as THREE from "three";
 import { CameraAnimation } from "./modules/CameraAnimation.js";
 import { Fetch } from "./modules/Fetch.js";
 import {Audios} from "./modules/Audio"
+import { Memorama } from "./modules/memorama";
 
 export class AppController {
   #myEnviorment;
@@ -102,18 +103,22 @@ export class AppController {
 
   listener() {
     document.getElementById("game").addEventListener("click", () => {
+      this.audio.stopMusic()
       this.sectionUI = "gameUI";
       this.renderUIActivate = true;
     });
     document.getElementById("conversation").addEventListener("click", () => {
+      this.audio.stopMusic()
       this.sectionUI = "conversationUI";
       this.renderUIActivate = true;
     });
     document.getElementById("draw").addEventListener("click", () => {
+      this.audio.stopMusic()
       this.sectionUI = "drawUI";
       this.renderUIActivate = true;
     });
     document.getElementById("shop").addEventListener("click", () => {
+      this.audio.stopMusic()
       this.sectionUI = "shopUI";
       this.renderUIActivate = true;
     });
@@ -132,7 +137,7 @@ export class AppController {
 
             setTimeout(async () => {
               this.view = this.#viewUI.render("draw");
-              this.#viewUI.drawLogic("draw", this.duck);
+              this.drawLogic("draw", this.duck);
               
 
               /**FETCH PARA SABER QUE DIBUJO ES */
@@ -211,7 +216,7 @@ export class AppController {
               // console.log(this.fetch.test)
               this.#viewUI.render("conversation");
               var i = 0
-              this.drawLogic(i)
+              this.drawLogic("conversation", "", this.fetch.test[i], false)
 
               document.querySelector(".answer").addEventListener('click',async (e) => {
                 i++
@@ -241,13 +246,13 @@ export class AppController {
           case "shopUI":
             this.#ducktor.playAnimationShop();
             this.cameraAnimation.playAnimationShop();
-            
+            this.audio.playShopMusic()
             setTimeout(async () => {
               await this.fetch.getFurnitures()
 
 
               this.view = this.#viewUI.render("shop");
-              this.#viewUI.drawLogic("shop", this.duck, this.fetch.shopFornitures, false);
+              this.drawLogic("shop", this.duck, this.fetch.shopFornitures, false);
 
               this.listenerShop()
 
@@ -258,10 +263,11 @@ export class AppController {
             break;
           case "gameUI":
             
+            this.audio.playGameMusic()
             setTimeout(async () => {
               
               this.#viewUI.render("play");
-              this.#viewUI.drawLogic("play");
+              this.drawLogic("play");
             }, 1500);
             this.#ducktor.playAnimationGame();
             this.cameraAnimation.playAnimationConversation();
@@ -294,9 +300,7 @@ export class AppController {
 
   
   }
-  drawLogic(i) {
-    this.#viewUI.drawLogic("conversation", "", this.fetch.test[i], false);
-  }
+
   listener2() {
     window.addEventListener("resize", () => {
       this.#camera.aspect = window.innerWidth / window.innerHeight;
@@ -341,15 +345,16 @@ export class AppController {
         this.#scene.add(this.houseEnviorment);
         console.log(this.houseEnviorment)
       },
-      function (xhr) {
+      (xhr)=> {
         console.log((xhr.loaded / xhr.total) * 100 + ' soy la casa')
         if ((xhr.loaded / xhr.total) * 100 === 100) {
-          setTimeout(function () {
+          setTimeout(()=> {
             document.getElementById('charging-page').classList.add('vanish')
-            setTimeout(function () {
+            setTimeout(()=> {
+              this.audio.playAmbientMusic()
               let node = document.getElementById('charging-page')
               node.parentNode.removeChild(node)
-            }, 5300)
+            }, 3300)
           }, 1000)
 
         };
@@ -520,6 +525,309 @@ export class AppController {
   changeShowCoins(data) {
     document.getElementById('show-coins').innerText = data
   }
+
+
+
+
+/**----------DRAW UI LISTENNERS----AND LOGIC */
+
+  drawLogic(logicExpresion, duck = '', data = '', bol = false) {
+    switch (logicExpresion) {
+      case "draw":
+        var draw = document.querySelector(".draw");
+        var menu = document.querySelector(".menu");
+        setTimeout(() => {
+          draw.style.opacity = 1;
+        }, 500);
+        document.querySelector(".close").addEventListener("click", () => {
+          draw.style.opacity = 0;
+          setTimeout(() => {
+            draw.remove();
+            
+            this.cameraAnimation.playAnimationDefault();
+          }, 500);
+
+          menu.style.display = "flex";
+          menu.style.opacity = 1;
+        });
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const color = document.getElementById("color");
+        const line = document.getElementById("lineWidth");
+        const clear = document.getElementById("clear");
+
+        const canvasOffsetX = canvas.offsetLeft;
+        const canvasOffsetY = canvas.offsetTop;
+
+        canvas.width = window.innerWidth - canvasOffsetX;
+        canvas.height = window.innerHeight - canvasOffsetY;
+
+        let paint = false;
+        let lineWidth = 5;
+
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        clear.addEventListener("click", (e) => {
+          if (e.target.id === "clear") {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+          }
+          ctx.fillStyle = "white";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        });
+
+        color.addEventListener("click", (e) => {
+          if (e.target.id === "stroke") {
+            ctx.strokeStyle = e.target.value;
+          }
+        });
+        line.addEventListener("click", (e) => {
+          if (e.target.id === "lineWidth") {
+            lineWidth = e.target.value;
+          }
+        });
+
+        canvas.addEventListener("mousedown", (e) => {
+          paint = false;
+          ctx.beginPath();
+          ctx.moveTo(e.clientX, e.clientY);
+        });
+
+        canvas.addEventListener("mouseup", () => {
+          paint = true;
+        });
+
+        canvas.addEventListener("mousemove", (e) => {
+          if (paint == false) {
+            ctx.lineCap = "round";
+            ctx.lineWidth = `${line.value}`;
+            ctx.strokeStyle = `${color.value}`;
+
+            ctx.lineTo(e.clientX - canvasOffsetX, e.clientY);
+            ctx.stroke();
+          }
+        });
+        break;
+      case 'play':
+        var menograma = document.querySelector(".memograma");
+        var menu = document.querySelector(".menu");
+        setTimeout(() => {
+          menograma.style.opacity = 1;
+        }, 500);
+        document.querySelector(".close").addEventListener("click", () => {
+          this.audio.stopMusic()
+          menograma.style.opacity = 0;
+          setTimeout(() => {
+            this.audio.playAmbientMusic()
+            menograma.remove();
+            this.cameraAnimation.playAnimationDefault();
+          }, 500);
+
+          menu.style.display = "flex";
+          menu.style.opacity = 1;
+        });
+        var imgCover = new Image();
+        var img1 = new Image();
+        var img2 = new Image();
+        var img3 = new Image();
+        var img4 = new Image();
+        var img5 = new Image();
+        var img6 = new Image();
+        var img7 = new Image();
+        var img8 = new Image();
+
+        imgCover.src = require('../assets/img/doodad.jpg');
+        img1.src = require('../assets/img/1.jpg');
+        img2.src = require('../assets/img/2.jpg');
+        img3.src = require('../assets/img/3.jpg');
+        img4.src = require('../assets/img/4.jpg');
+        img5.src = require('../assets/img/5.jpg');
+        img6.src = require('../assets//img/6.jpg');
+        img7.src = require('../assets/img/7.jpg');
+        img8.src = require('../assets/img/8.jpg');
+
+        var json = [
+          {
+            "src": img1.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img1.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img2.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img2.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img3.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img3.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img4.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img4.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img5.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img5.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img6.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img6.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img7.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img7.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img8.src,
+            "default": imgCover.src
+          },
+          {
+            "src": img8.src,
+            "default": imgCover.src
+          }
+        ]
+
+
+        new Memorama(json);
+
+        break;
+      case "shop":
+        if (!bol) {
+          this.#viewUI.appendReward(data)
+          bol = true
+        }
+        var shop = document.querySelector(".shop");
+        var menu = document.querySelector(".menu");
+        menu.style.opacity = 0;
+        setTimeout(() => {
+          shop.style.opacity = 1;
+        }, 500);
+
+        document.querySelector(".close").addEventListener("click", () => {
+          this.audio.stopMusic()
+          shop.style.opacity = 0;
+          setTimeout(() => {
+            shop.remove();
+            this.audio.playAmbientMusic()
+          }, 500);
+          menu.style.display = "flex";
+          menu.style.opacity = 1;
+          this.cameraAnimation.playAnimationDefault();
+          this.#ducktor.playAnimationDefault(duck);
+        });
+        break;
+      case 'conversation':
+
+        var menograma = document.querySelector(".conversation");
+        var menu = document.querySelector(".menu");
+        setTimeout(() => {
+          menograma.style.opacity = 1;
+        }, 500);
+        document.querySelector(".close").addEventListener("click", () => {
+          menograma.style.opacity = 0;
+          setTimeout(() => {
+            menograma.remove();
+            // this.cameraAnimation.playAnimationDefault();
+          }, 500);
+
+          menu.style.display = "flex";
+          menu.style.opacity = 1;
+        });
+
+        if (!bol) {
+          // console.log(data)
+          document.querySelector('.text-question').innerHTML = data.pregunta;
+          document.querySelector('.answer').innerHTML = ''
+          var i = 1
+          Object.entries(data).forEach(([key, value]) => {
+
+            if (key == `respuesta${i}` && value != '') {
+              let myLi = document.createElement('li');
+              myLi.setAttribute('class', 'li-answer center')
+              myLi.setAttribute('data-index-number', i)
+              myLi.innerText = value;
+              document.querySelector('.answer').appendChild(myLi);
+              i++
+            }
+            // console.log(i)
+          });
+
+          bol = true;
+
+        }
+
+    }
+
+  }
+  listennersPopUp() {
+
+    document.getElementById("button-der-popup").addEventListener('click', () => {
+
+      let node = document.getElementById("image-selected")
+      node.parentElement.removeChild(node)
+
+      if (this.data.length != 0) {
+
+        if (this.i < this.data.length - 1) {
+
+          this.i++
+
+        } else {
+          this.i = 0
+        }
+        console.log(this.i)
+        document.getElementById('imagen-popup').innerHTML += `<img src="${this.data[this.i].URL_Dibujo}" id="image-selected"></img>`
+        this.listennersPopUp()
+      }
+
+    })
+
+    document.getElementById("button-iz-popup").addEventListener('click', () => {
+
+      let node = document.getElementById("image-selected")
+      node.parentElement.removeChild(node)
+
+      if (this.data.length != 0) {
+
+        if (this.i > 0) {
+          this.i--
+        } else {
+          this.i = this.data.length - 1
+        }
+        console.log(this.i)
+        document.getElementById('imagen-popup').innerHTML += `<img src="${this.data[this.i].URL_Dibujo}" id="image-selected"></img>`
+        this.listennersPopUp()
+      }
+
+    })
+  }
+
 }
 
 
