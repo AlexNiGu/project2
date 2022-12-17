@@ -8,6 +8,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 import { CameraAnimation } from "./modules/CameraAnimation.js";
 import { Fetch } from "./modules/Fetch.js";
+import {Audios} from "./modules/Audio"
 
 export class AppController {
   #myEnviorment;
@@ -48,6 +49,8 @@ export class AppController {
     this.#controls = this.#myEnviorment.getControls();
     this.#viewUI = new ViewUI(this.#camera);
     this.cameraAnimation = new CameraAnimation(this.#camera);
+
+    this.audio = new Audios()
 
     this.paintSelected
 
@@ -238,7 +241,7 @@ export class AppController {
           case "shopUI":
             this.#ducktor.playAnimationShop();
             this.cameraAnimation.playAnimationShop();
-
+            
             setTimeout(async () => {
               await this.fetch.getFurnitures()
 

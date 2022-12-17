@@ -1,22 +1,23 @@
 export class Audios{
 
-
-
     constructor(){
-        this.audioShop = '../../assets/audio/shop.mpeg'
+        this.audio
+        this.audioShop = new URL("../../assets/audio/shop.mp3", import.meta.url)
+
     }
 
 
 
     playShopMusic(){
 
-        var audio = new Audio(this.audioShop)
-        audio.play()
+        this.audio = new Audio(this.audioShop)
+        this.audio.loop = true
+        this.audio.play()
 
     }
 
-    stopShopMusic(){
-
+    stopMusic(){
+        this.audio.pause()
     }
 
 

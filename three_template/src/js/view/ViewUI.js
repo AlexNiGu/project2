@@ -1,6 +1,7 @@
 import { CameraAnimation } from "../modules/CameraAnimation";
 import { Ducktor } from "./3dModel/Ducktor";
 import { Memorama } from "../modules/memorama";
+import { Audios } from "../modules/Audio";
 
 export class ViewUI {
   UIroot = document.getElementById("root-ui");
@@ -15,6 +16,8 @@ export class ViewUI {
     this.data
     this.user = JSON.parse(localStorage.getItem('user'))
     this.coins=this.user.Coins
+
+    this.audios = new Audios()
   }
 
   render(myExpresion) {
@@ -80,6 +83,7 @@ export class ViewUI {
             <canvas id="canvas" class="draw-canvas"></canvas>
         </div>
     </section>`;
+        
         this.logicExpresion = "draw";
         break;
 
@@ -160,6 +164,7 @@ export class ViewUI {
                             </ul>
                         </main>
                     </div>`;
+                    this.audios.playShopMusic()
         break;
         case 'play':
           console.log('entro en tu cu')
@@ -509,6 +514,7 @@ export class ViewUI {
         }, 500);
 
         document.querySelector(".close").addEventListener("click", () => {
+          this.audios.stopMusic()
           shop.style.opacity = 0;
           setTimeout(() => {
             shop.remove();
