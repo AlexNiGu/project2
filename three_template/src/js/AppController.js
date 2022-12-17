@@ -134,8 +134,8 @@ export class AppController {
 
               /**FETCH PARA SABER QUE DIBUJO ES */
               await this.fetch.fetchGetPaiting()
-              this.#viewUI.renderPopUpDraw(this.fetch.paint)
-              this.drawListener(this.conditionDraw)
+              // this.#viewUI.renderPopUpDraw(this.fetch.paint)
+              // this.drawListener(this.conditionDraw)
               
               /**LISTENER PARA SUBIR EL DIBUJO */
               document.getElementById('save-panting').addEventListener('click', async () => {
@@ -254,9 +254,9 @@ export class AppController {
 
             break;
           case "gameUI":
-            console.log("game");
+            
             setTimeout(async () => {
-              console.log("entro")
+              
 
               this.#viewUI.render("play");
               this.#viewUI.drawLogic("play");
@@ -275,13 +275,13 @@ export class AppController {
     // this.listener.bind(this);
   }
 
-  drawListener(condition){
+  drawListener(){
 
-      if(condition){
+  
       this.conditionDraw = false
       document.getElementById('button-draw-selected').addEventListener('click',(e)=>{
       this.paintSelected = e.target.textContent
-      console.log(this.paintSelected)
+      console.log(this.fetch.paint.Descripcion)
       var node = document.querySelector('.popup')
       node.parentNode.removeChild(node)
     })
@@ -293,7 +293,7 @@ export class AppController {
     })
 
 
-  }
+  
   }
   drawLogic(i) {
     this.#viewUI.drawLogic("conversation", "", this.fetch.test[i], false);

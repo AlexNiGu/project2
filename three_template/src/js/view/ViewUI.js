@@ -396,7 +396,7 @@ export class ViewUI {
           menograma.style.opacity = 1;
         }, 500);
         document.querySelector(".close").addEventListener("click", () => {
-          draw.style.opacity = 0;
+          menograma.style.opacity = 0;
           setTimeout(() => {
             menograma.remove();
             // this.anim.playAnimationDefault();
@@ -521,6 +521,21 @@ export class ViewUI {
         break;
       case 'conversation':
         
+      var menograma = document.querySelector(".conversation");
+        var menu = document.querySelector(".menu");
+        setTimeout(() => {
+          menograma.style.opacity = 1;
+        }, 500);
+        document.querySelector(".close").addEventListener("click", () => {
+          menograma.style.opacity = 0;
+          setTimeout(() => {
+            menograma.remove();
+            // this.anim.playAnimationDefault();
+          }, 500);
+
+          menu.style.display = "flex";
+          menu.style.opacity = 1;
+        });
 
         if (!bol) {
           // console.log(data)
@@ -641,6 +656,20 @@ export class ViewUI {
     })
   }
 
+  renderPopUpDraw(data){
+    const popDraw = `<div class="popup" id="popup">
+    <div class="imagen-popup" id="imagen-popup">
+  <button id="button-draw-selected" class="button-iz-popup"> ${data[0].Tipo}</button>
+  <p>200 peces!</p>
+  
+  <button id="button-libre" class="button-der-popup"> Libre </button> 
+  <p>50 peces!</p>
+  </div>
+  </div>
+    </div>`
+
+    document.querySelector('.draw').innerHTML += popDraw
+  }
 
   appendReward(data) {
     for (let i = 0; i < data.length; i++) {

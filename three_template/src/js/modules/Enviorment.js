@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { TorusGeometry } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
@@ -18,20 +17,21 @@ export class Enviorment {
       0.1,
       1000
     );
+    // this.camera.zoom.set(20)    
+    // this.camera.rotation.set(0,0,0)
     this.camera.rotation.set(-0.206, 0, 0);
     this.camera.position.set(0, 10, 28);
-    // console.log(this.camera);
 
     // Render the scece in the element that you want. In our case is a canvas
     this.renderer = new THREE.WebGLRenderer({
       canvas: document.querySelector("#bg"),
-      antialias: true,
-      alpha: true
     });
     // configuration of pixelRatio and size
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(window.innerWidth, window.innerHeight);
-    this.renderer.physicallyCorrectLights = true;
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    // this.renderer.physicallyCorrectLights = true;
     this.renderer.outputEncoding = THREE.sRGBEncoding;
     this.renderer.gammaOutput = true;
     this.renderer.gammaFactor = 2.2;
@@ -41,44 +41,89 @@ export class Enviorment {
     // this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 
     // pointLightHelper to know where is the light source
-    this.gridHelper = new THREE.GridHelper(200, 50);
-    this.axisHelper = new THREE.AxesHelper(20);
-    this.scene.add( this.gridHelper, this.axisHelper );
+    // this.gridHelper = new THREE.GridHelper(200, 50);
+    // this.axisHelper = new THREE.AxesHelper(20);
+    // this.scene.add( this.gridHelper, this.axisHelper );
 
-    this.scene.background = new THREE.Color(0xdddddd);
+    // const pointLightHelper = new THREE.pointLightHelper( camera, renderer.domElement );
+
+    this.scene.background = new THREE.Color(0x4477ff);
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    this.hlight = new THREE.AmbientLight(0xffffff, 1);
+    this.hlight = new THREE.AmbientLight(0xffffff, 0.5);
     this.scene.add(this.hlight);
 
-    this.directionalLight = new THREE.DirectionalLight(0x000000, 5);
-    this.directionalLight.position.set(5, 7, 10);
-    this.directionalLight.shadow.camera.far = 20;
-    this.directionalLight.shadow.mapSize.set(1024,1024);
-    this.directionalLight.shadow.normalBias = 0.05;
+    this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    this.directionalLight.position.set(-5, -1, 0);
     this.directionalLight.castShadow = true;
     this.scene.add(this.directionalLight);
 
-    // this.light = new THREE.PointLight(0x0f0f0f, 10);
-    // this.light.position.set(0, 5, 0);
-    // this.scene.add(this.light);
+    this.light = new THREE.PointLight(0xa0a0a0, 0.5);
+    this.light.position.set(0, 100, -200);
+    this.scene.add(this.light);
 
-    // this.light2 = new THREE.PointLight(0x0f0f0f, 10);
-    // this.light2.position.set(0, 5, 0);
-    // this.scene.add(this.light2);
+    this.light2 = new THREE.PointLight(0x909090, 0.1);
+    this.light2.position.set(-45, 20, -100);
+    // this.light2.rotation.set(5,5,0)
+    this.scene.add(this.light2);
 
-    // this.light3 = new THREE.PointLight(0x111111, 10);
-    // this.light3.position.set(0, 5, 0);
-    // this.scene.add(this.light3);
+    this.light3 = new THREE.PointLight(0x000000, 0.5);
+    this.light3.position.set(50, 100, -200);
+    this.scene.add(this.light3);
 
-    // this.light4 = new THREE.PointLight(0x0f0f0f, 10);
-    // this.light4.position.set(0, 5, 0);
-    // this.scene.add(this.light4);
+    this.light4 = new THREE.PointLight(0x000000, 5);
+    this.light4.position.set(-150, 100, -200);
+    this.scene.add(this.light4);
 
-    const pointLightHelper = new THREE.PointLightHelper(this.directionalLight,1);
-    this.scene.add(pointLightHelper);
+
+
+    /**SKYBOX---------------------------------------------------- */
+    var skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
+    var skybox = new THREE.Mesh(skyboxGeo);
+    this.scene.add(skybox)
+
+
+    const ft = new THREE.TextureLoader().load("../../assets/img/skybox/purplenebula_ft.jpg");
+    const bk = new THREE.TextureLoader().load("../../assets/img/skybox/purplenebula_bk.jpg");
+    const up = new THREE.TextureLoader().load("../../assets/img/skybox/purplenebula_up.jpg");
+    const dn = new THREE.TextureLoader().load("../../assets/img/skybox/purplenebula_dn.jpg");
+    const rt = new THREE.TextureLoader().load("../../assets/img/skybox/purplenebula_rt.jpg");
+    const lf = new THREE.TextureLoader().load("../../assets/img/skybox/purplenebula_lf.jpg");
+
+    var skyboxImage = 'purplenebula';
+
+    const materialArray = this.createMaterialArray(skyboxImage);
+    skyboxGeo = new THREE.BoxGeometry(10000, 10000, 10000);
+    skybox = new THREE.Mesh(skyboxGeo, materialArray);
+    this.scene.add(skybox);
+
+
   }
+
+  createPathStrings(filename) {
+    const basePath = "../../assets/img/skybox/";
+    const baseFilename = basePath + filename;
+    const fileType = ".png";
+    const sides = ["ft", "bk", "up", "dn", "rt", "lf"];
+    const pathStings = sides.map(side => {
+      return baseFilename + "_" + side + fileType;
+    });
+
+    return pathStings;
+  }
+
+
+  createMaterialArray(filename) {
+    const skyboxImagepaths = this.createPathStrings(filename);
+    const materialArray = skyboxImagepaths.map(image => {
+      let texture = new THREE.TextureLoader().load(image);
+
+      return texture;
+    });
+    return materialArray;
+  }
+
 
   getScene() {
     return this.scene;
