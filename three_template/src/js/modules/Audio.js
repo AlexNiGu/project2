@@ -7,12 +7,21 @@ export class Audios{
     }
 
 
+    playAmbientMusic(){
+        
+    }
+
+    playPlayMusic(){
+        
+    }
 
     playShopMusic(){
-
         this.audio = new Audio(this.audioShop)
         this.audio.loop = true
         this.audio.play()
+    }
+
+    playDrawMusic(){
 
     }
 

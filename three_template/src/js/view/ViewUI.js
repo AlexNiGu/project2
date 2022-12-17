@@ -15,7 +15,7 @@ export class ViewUI {
     this.i = 0
     this.data
     this.user = JSON.parse(localStorage.getItem('user'))
-    this.coins=this.user.Coins
+    this.coins = this.user.Coins
 
     this.audios = new Audios()
   }
@@ -83,7 +83,7 @@ export class ViewUI {
             <canvas id="canvas" class="draw-canvas"></canvas>
         </div>
     </section>`;
-        
+
         this.logicExpresion = "draw";
         break;
 
@@ -127,7 +127,7 @@ export class ViewUI {
     </div>`;
 
         this.logicExpresion = 'conversation';
-        
+
         break
 
       case "shop":
@@ -164,11 +164,11 @@ export class ViewUI {
                             </ul>
                         </main>
                     </div>`;
-                    this.audios.playShopMusic()
+        this.audios.playShopMusic()
         break;
-        case 'play':
-          console.log('entro en tu cu')
-          myView = `
+      case 'play':
+        console.log('entro en tu cu')
+        myView = `
             <div class="contenedor-general memograma" style="z-index: 3;">
             <header class="flex">
               <h1>Juego!</h1>
@@ -420,80 +420,80 @@ export class ViewUI {
         var img7 = new Image();
         var img8 = new Image();
 
-        imgCover.src= require('../../assets/img/doodad.jpg');
-        img1.src= require('../../assets/img/1.jpg');
-        img2.src= require('../../assets/img/2.jpg');
-        img3.src= require('../../assets/img/3.jpg');
-        img4.src= require('../../assets/img/4.jpg');
-        img5.src= require('../../assets/img/5.jpg');
-        img6.src= require('../../assets//img/6.jpg');
-        img7.src= require('../../assets/img/7.jpg');
-        img8.src= require('../../assets/img/8.jpg');
+        imgCover.src = require('../../assets/img/doodad.jpg');
+        img1.src = require('../../assets/img/1.jpg');
+        img2.src = require('../../assets/img/2.jpg');
+        img3.src = require('../../assets/img/3.jpg');
+        img4.src = require('../../assets/img/4.jpg');
+        img5.src = require('../../assets/img/5.jpg');
+        img6.src = require('../../assets//img/6.jpg');
+        img7.src = require('../../assets/img/7.jpg');
+        img8.src = require('../../assets/img/8.jpg');
 
         var json = [
           {
-              "src": img1.src,
-              "default" : imgCover.src
+            "src": img1.src,
+            "default": imgCover.src
           },
           {
-              "src": img1.src,
-              "default" : imgCover.src
+            "src": img1.src,
+            "default": imgCover.src
           },
           {
-              "src": img2.src,
-              "default" : imgCover.src
+            "src": img2.src,
+            "default": imgCover.src
           },
           {
-              "src": img2.src,
-              "default" : imgCover.src
+            "src": img2.src,
+            "default": imgCover.src
           },
           {
-              "src": img3.src,
-              "default" : imgCover.src
+            "src": img3.src,
+            "default": imgCover.src
           },
           {
-              "src": img3.src,
-              "default" : imgCover.src
+            "src": img3.src,
+            "default": imgCover.src
           },
           {
-              "src": img4.src,
-              "default" : imgCover.src
+            "src": img4.src,
+            "default": imgCover.src
           },
           {
-              "src": img4.src,
-              "default" : imgCover.src
+            "src": img4.src,
+            "default": imgCover.src
           },
           {
-              "src": img5.src,
-              "default" : imgCover.src
+            "src": img5.src,
+            "default": imgCover.src
           },
           {
-              "src": img5.src,
-              "default" : imgCover.src
+            "src": img5.src,
+            "default": imgCover.src
           },
           {
-              "src": img6.src,
-              "default" : imgCover.src
+            "src": img6.src,
+            "default": imgCover.src
           },
           {
-              "src": img6.src,
-              "default" : imgCover.src
+            "src": img6.src,
+            "default": imgCover.src
           },
           {
-              "src": img7.src,
-              "default" : imgCover.src
+            "src": img7.src,
+            "default": imgCover.src
           },
           {
-              "src": img7.src,
-              "default" : imgCover.src
+            "src": img7.src,
+            "default": imgCover.src
           },
           {
-              "src": img8.src,
-              "default" : imgCover.src
+            "src": img8.src,
+            "default": imgCover.src
           },
           {
-              "src": img8.src,
-              "default" : imgCover.src
+            "src": img8.src,
+            "default": imgCover.src
           }
         ]
 
@@ -526,8 +526,8 @@ export class ViewUI {
         });
         break;
       case 'conversation':
-        
-      var menograma = document.querySelector(".conversation");
+
+        var menograma = document.querySelector(".conversation");
         var menu = document.querySelector(".menu");
         setTimeout(() => {
           menograma.style.opacity = 1;
@@ -562,7 +562,7 @@ export class ViewUI {
           });
 
           bol = true;
-        
+
         }
 
       ////////////////////////////////////////////////////////////////////////////////////
@@ -602,9 +602,11 @@ export class ViewUI {
     }
 
   }
- renderPopUp(i=0){
 
-  const popUp =`<div class="popup" id="popup">
+  
+  renderPopUp(i = 0) {
+
+    const popUp = `<div class="popup" id="popup">
   <div class="imagen-popup" id="imagen-popup">
   <button id="button-iz-popup" class="button-iz-popup"> izquierda </button>
   <button id="button-der-popup" class="button-der-popup"> derecha </button> 
@@ -615,24 +617,24 @@ export class ViewUI {
   <button id="popup-cancelar">Cancelar</button>
   </div>
   </div>`
-          
-  document.querySelector('.shop').innerHTML += popUp
+
+    document.querySelector('.shop').innerHTML += popUp
   }
 
-  listennersPopUp(){
+  listennersPopUp() {
 
-    document.getElementById("button-der-popup").addEventListener('click',()=>{
+    document.getElementById("button-der-popup").addEventListener('click', () => {
 
       let node = document.getElementById("image-selected")
       node.parentElement.removeChild(node)
 
-      if(this.data.length != 0){
+      if (this.data.length != 0) {
 
-        if(this.i < this.data.length -1){
+        if (this.i < this.data.length - 1) {
 
           this.i++
 
-        }else{
+        } else {
           this.i = 0
         }
         console.log(this.i)
@@ -642,36 +644,35 @@ export class ViewUI {
 
     })
 
-    document.getElementById("button-iz-popup").addEventListener('click',()=>{
+    document.getElementById("button-iz-popup").addEventListener('click', () => {
 
       let node = document.getElementById("image-selected")
       node.parentElement.removeChild(node)
 
-      if(this.data.length != 0){
+      if (this.data.length != 0) {
 
-        if(this.i > 0){
+        if (this.i > 0) {
           this.i--
-        }else{
-          this.i = this.data.length -1
+        } else {
+          this.i = this.data.length - 1
         }
         console.log(this.i)
         document.getElementById('imagen-popup').innerHTML += `<img src="${this.data[this.i].URL_Dibujo}" id="image-selected"></img>`
         this.listennersPopUp()
       }
-      
+
     })
   }
 
-  renderPopUpDraw(data){
+  renderPopUpDraw(data) {
     const popDraw = `<div class="popup" id="popup">
-    <div class="imagen-popup" id="imagen-popup">
-  <button id="button-draw-selected" class="button-iz-popup"> ${data[0].Tipo}</button>
-  <p>200 peces!</p>
-  
-  <button id="button-libre" class="button-der-popup"> Libre </button> 
-  <p>50 peces!</p>
-  </div>
-  </div>
+          <div class="imagen-popup" id="imagen-popup">
+              <button id="button-draw-selected" class="button-iz-popup"> ${data[0].Tipo}</button>
+              <p>200 peces!</p>
+        
+              <button id="button-libre" class="button-der-popup"> Libre </button> 
+              <p>50 peces!</p>
+          </div>
     </div>`
 
     document.querySelector('.draw').innerHTML += popDraw
