@@ -29,6 +29,7 @@ export class AppController {
   shopUI;
   GameUI;
   sectionUI;
+  paintSelected;
 
   #viewUI;
   renderUIActivate = true;
@@ -55,7 +56,7 @@ export class AppController {
 
     this.audio = new Audios()
 
-    this.paintSelected
+    this.paintSelected = []
 
     this.conditionDraw = true
 
@@ -162,40 +163,37 @@ export class AppController {
                 const user = JSON.parse(localStorage.getItem('user'))
                 const formData = new FormData()
 
-                console.log(this.paintSelected)
-
-                switch(this.paintSelected){
-                  case 'Libre':
-                    console.log('vale es aqui')
-                    break;
-                }
-                if (this.paintSelected == "Libre") {
-                  
-                  formData.append('IdDibujo', 'libre')
+                
+                if (this.paintSelected.length == 0) {
+    
+                  formData.append('IdDibujo', 'Libre')
+                  formData.append('NombreDibujo', 'Libre')
                   var cuerpoCoins = {
                     IdUser: this.user.IdUser,
                     Coins: this.user.Coins + 50
                   }
-                } else if(this.paintSelected == this.fetch.paint[0].Tipo) {
+                } else{
                   formData.append('IdDibujo', this.fetch.paint[0].IdDibujo)
+                  formData.append('NombreDibujo', this.fetch.paint[0].Tipo)
                   var cuerpoCoins = {
                     IdUser: this.user.IdUser,
                     Coins: this.user.Coins + 200
                   }
                 }
-                formData.append('NombreDibujo', this.fetch.paint[0].Tipo)
+  
+                
+                
                 formData.append('IdUser', user.IdUser)
                 formData.append('MyFile', img.src)
 
+                console.log(formData)
                 /**Fetch para enviar el dibujo al servidor */
 
-              //  this.fetch.fetchSavePainting(formData)
-
-                
-              console.log(formData)
-                // this.user.Coins = cuerpoCoins.Coins
+               this.fetch.fetchSavePainting(formData)
+                this.user.Coins = cuerpoCoins.Coins
+                // localStorage.setItem('user',this.user)
                 this.changeShowCoins(this.user.Coins)
-                // this.fetch.fetchCoins(cuerpoCoins)
+                this.fetch.fetchCoins(cuerpoCoins)
 
               })
 
@@ -303,24 +301,20 @@ export class AppController {
   }
 
   drawListener() {
-    document.getElementById('button-draw-selected').addEventListener('click', (e) => {
-      this.paintSelected = e.target.textContent
-      console.log(this.fetch.paint)
+    document.getElementById('button-draw-selected').addEventListener('click', async (e) => {
+      this.paintSelected.push(e.target.textContent)
       var node = document.querySelector('.popup')
       node.parentNode.removeChild(node)
       document.querySelector('.overlay').style.display = 'none'
     })
-    document.getElementById('button-libre').addEventListener('click', (e) => {
-      this.paintSelected = e.target.textContent
+    document.getElementById('button-libre').addEventListener('click',async (e) => {
       var node = document.querySelector('.popup')
-      console.log(this.paintSelected)
       node.parentNode.removeChild(node)
       document.querySelector('.overlay').style.display = 'none'
     })
-
-
 
   }
+
 
   listener2() {
     window.addEventListener("resize", () => {
@@ -440,7 +434,7 @@ export class AppController {
           texture.repeat.set(4, 4)
           texture.flipY = false
 
-          var mesh = model.children[1]
+          var mesh = model.children[2]
 
           mesh.material = new THREE.MeshStandardMaterial({
             map: texture
