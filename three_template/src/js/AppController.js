@@ -93,7 +93,7 @@ export class AppController {
     // keyControls.resetHover(this.#scene);
     // keyControls.hoverPiece(this.#scene, this.#camera);
     // this.#myKeyControls.hoverPiece();
-    this.#controls.update();
+    // this.#controls.update();
 
     // This is for the animations of the character
     if (this.duck) {
@@ -432,7 +432,7 @@ export class AppController {
           texture.wrapS = THREE.RepeatWrapping
           texture.wrapT = THREE.RepeatWrapping
           texture.repeat.set(4, 4)
-          texture.flipY = false
+          texture.flipY = true
 
           var mesh = model.children[2]
 
@@ -440,7 +440,7 @@ export class AppController {
             map: texture
           })
 
-          mesh.position.set(data[i].ParamX - 20, data[i].ParamY, -39)
+          mesh.position.set(data[i].ParamX+1.6, data[i].ParamY+1, -11.6)
           mesh.rotation.set(0, Math.PI / 2, 0)
           // model.children[1].background = texture
           console.log(mesh)

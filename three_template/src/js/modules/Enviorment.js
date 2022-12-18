@@ -43,7 +43,7 @@ export class Enviorment {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     // Controls to move in the scene
-    this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+    // this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 
     // pointLightHelper to know where is the light source
     // this.gridHelper = new THREE.GridHelper(200, 50);
