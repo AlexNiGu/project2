@@ -329,9 +329,9 @@ export class AppController {
       this.#render.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // this.buttonConversation.addEventListener("click", this.activeDrawUI());
-    // window.addEventListener('mousemove', keyControls.onMouseMove, false);
-    // window.addEventListener('click', keyControls.onClick(this.#camera, this.#scene ));
+    this.buttonConversation.addEventListener("click", this.activeDrawUI());
+    window.addEventListener('mousemove', keyControls.onMouseMove, false);
+    window.addEventListener('click', keyControls.onClick(this.#camera, this.#scene ));
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
