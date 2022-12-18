@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { sRGBEncoding } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
@@ -19,12 +20,16 @@ export class Enviorment {
     );
     // this.camera.zoom.set(20)    
     // this.camera.rotation.set(0,0,0)
+    // this.camera.rotation.set(-0.456, 0.1, -0.5);
+    // this.camera.position.set(-20, 195, 300);
     this.camera.rotation.set(-0.206, 0, 0);
     this.camera.position.set(0, 10, 28);
 
     // Render the scece in the element that you want. In our case is a canvas
     this.renderer = new THREE.WebGLRenderer({
       canvas: document.querySelector("#bg"),
+      antialias:true,
+      alpha: false
     });
     // configuration of pixelRatio and size
     this.renderer.setPixelRatio(window.devicePixelRatio);
@@ -38,7 +43,7 @@ export class Enviorment {
     this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
     // Controls to move in the scene
-    // this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+    this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 
     // pointLightHelper to know where is the light source
     // this.gridHelper = new THREE.GridHelper(200, 50);
@@ -47,8 +52,17 @@ export class Enviorment {
 
     // const pointLightHelper = new THREE.pointLightHelper( camera, renderer.domElement );
 
-    this.scene.background = new THREE.Color(0x4477ff);
 
+
+    // const bg = 
+    // bg.encoding = sRGBEncoding;
+    // this.scene.background = bg;
+
+    const geometry = new THREE.BoxGeometry( 90, 80, 1 );
+    const material = new THREE.MeshBasicMaterial({color:0x7aa7f0});
+    const cube = new THREE.Mesh( geometry, material );
+    cube.position.set(0,0,-25)
+    this.scene.add( cube );
     /////////////////////////////////////////////////////////////////////////////////////////////////////
 
     this.hlight = new THREE.AmbientLight(0xffffff, 0.5);

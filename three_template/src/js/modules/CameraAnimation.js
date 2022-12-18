@@ -15,6 +15,7 @@ export class CameraAnimation {
         this.timeLineDraw = gsap.timeline();
         this.timeLineGame = gsap.timeline();
         this.timeLineShop = gsap.timeline();
+        this.timeInit = gsap.timeline();
 
     }
 
@@ -114,5 +115,26 @@ export class CameraAnimation {
             duration: 1.5, 
             x: 0.0005
         }, "<");
+    }
+
+
+    playAnimationInit(){
+
+        this.timeInit
+        .to(this.camera.position, {
+            x: 0, // frente -- es izquierda | ++ es derecha
+            y: 3, // abajo -- es basjo | ++ es arriba
+            z: 24, // adelante -- es adelante | ++ es atras
+            duration: 1.5,
+            // ease: "expo.out",
+            // onUpdate: function() {
+            //     this.camera.polookAt(0,0,0);
+            // },
+        }, "+=0")
+        .to(this.camera.rotation, {
+            duration: 1.5, 
+            x: 0.0005
+        }, "<");
+
     }
 }

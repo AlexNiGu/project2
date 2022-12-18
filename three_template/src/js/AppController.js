@@ -11,6 +11,8 @@ import { Fetch } from "./modules/Fetch.js";
 import { Audios } from "./modules/Audio"
 import { Memorama } from "./modules/memorama";
 
+import gsap from "gsap";
+
 export class AppController {
   #myEnviorment;
   #scene;
@@ -65,9 +67,9 @@ export class AppController {
     console.log(this.arrayRewards)
     this.clock = new THREE.Clock();
 
-    this.loadElementsDucktor("https://res.cloudinary.com/eloy411/image/upload/v1671056488/ducktor_3_fieoxn.glb", 26, 1.5, -1);
+    
     this.loadElementsHouse(this.#myEnviorment.getHouse());
-
+    this.loadElementsDucktor(this.#ducktor.getDucktor(), 26, 1.5, -1);
     this.loadElementsRewards(this.arrayRewards)
 
 
@@ -90,7 +92,7 @@ export class AppController {
     // keyControls.resetHover(this.#scene);
     // keyControls.hoverPiece(this.#scene, this.#camera);
     // this.#myKeyControls.hoverPiece();
-    // this.#controls.update();
+    this.#controls.update();
 
     // This is for the animations of the character
     if (this.duck) {
@@ -106,21 +108,25 @@ export class AppController {
       this.audio.stopMusic()
       this.sectionUI = "gameUI";
       this.renderUIActivate = true;
+      // this.audio.playClickMusic()
     });
     document.getElementById("conversation").addEventListener("click", () => {
       this.audio.stopMusic()
       this.sectionUI = "conversationUI";
       this.renderUIActivate = true;
+      // this.audio.playClickMusic()
     });
     document.getElementById("draw").addEventListener("click", () => {
       this.audio.stopMusic()
       this.sectionUI = "drawUI";
       this.renderUIActivate = true;
+      // this.audio.playClickMusic()
     });
     document.getElementById("shop").addEventListener("click", () => {
       this.audio.stopMusic()
       this.sectionUI = "shopUI";
       this.renderUIActivate = true;
+      
     });
   }
 
@@ -132,8 +138,9 @@ export class AppController {
           case "drawUI":
             // console.log("draw");
             this.conditionDraw = true
-            this.#ducktor.playAnimationDraw(this.duck);
+            // this.#ducktor.playAnimationDraw(this.duck);
             this.cameraAnimation.playAnimationDraw();
+            this.audio.playClickMusic()
 
             setTimeout(async () => {
               this.view = this.#viewUI.render("draw");
@@ -155,13 +162,21 @@ export class AppController {
                 const user = JSON.parse(localStorage.getItem('user'))
                 const formData = new FormData()
 
-                if (this.paintSelected == 'libre') {
+                console.log(this.paintSelected)
+
+                switch(this.paintSelected){
+                  case 'Libre':
+                    console.log('vale es aqui')
+                    break;
+                }
+                if (this.paintSelected == "Libre") {
+                  
                   formData.append('IdDibujo', 'libre')
                   var cuerpoCoins = {
                     IdUser: this.user.IdUser,
                     Coins: this.user.Coins + 50
                   }
-                } else {
+                } else if(this.paintSelected == this.fetch.paint[0].Tipo) {
                   formData.append('IdDibujo', this.fetch.paint[0].IdDibujo)
                   var cuerpoCoins = {
                     IdUser: this.user.IdUser,
@@ -174,12 +189,13 @@ export class AppController {
 
                 /**Fetch para enviar el dibujo al servidor */
 
-                await this.fetch.fetchSavePainting(formData)
+              //  this.fetch.fetchSavePainting(formData)
 
-                await this.fetch.responseConversation(cuerpo)
-                this.user.Coins = cuerpoCoins.Coins
+                
+              console.log(formData)
+                // this.user.Coins = cuerpoCoins.Coins
                 this.changeShowCoins(this.user.Coins)
-                await this.fetch.fetchCoins(cuerpoCoins)
+                // this.fetch.fetchCoins(cuerpoCoins)
 
               })
 
@@ -188,7 +204,7 @@ export class AppController {
             document.querySelector(".menu").style.display = "none";
             break;
           case "conversationUI":
-
+            this.audio.playClickMusic()
             var cuerpo = {
               IdUser: this.fetch.user.IdUser,
               IdTest: "this.fetch.test.IdTest",
@@ -248,6 +264,7 @@ export class AppController {
 
             break;
           case "shopUI":
+            this.audio.playClickMusic()
             this.#ducktor.playAnimationShop();
             this.cameraAnimation.playAnimationShop();
             this.audio.playShopMusic()
@@ -264,7 +281,7 @@ export class AppController {
 
             break;
           case "gameUI":
-
+            this.audio.playClickMusic()
             this.audio.playGameMusic()
             setTimeout(async () => {
 
@@ -349,10 +366,10 @@ export class AppController {
           if (node.isMesh) node.castShadow = true;
         })
         this.#scene.add(this.houseEnviorment);
-        console.log(this.houseEnviorment)
+        // console.log(this.houseEnviorment)
       },
       (xhr) => {
-        console.log((xhr.loaded / xhr.total) * 100 + ' soy la casa')
+        // console.log((xhr.loaded / xhr.total) * 100 + ' soy la casa')
         if ((xhr.loaded / xhr.total) * 100 === 100) {
           setTimeout(() => {
             document.getElementById('charging-page').classList.add('vanish')
@@ -378,21 +395,29 @@ export class AppController {
     this.loader.load(
       element,
       (glb) => {
-        this.duck = glb.scene.children[0];
-        this.duck.position.set(10, 10, -10);
-        this.duck.rotation.set(0, 3.1, 0);
+        this.duck = glb.scene
+        this.duck.position.set(20, 0.35, -2);
+        this.duck.rotation.set(0, 1.8, 0);
 
         mixer = new THREE.AnimationMixer(this.duck);
         const clips = glb.animations;
-        clips.forEach(function (clip) {
-          const action = mixer.clipAction(clip);
-          action.play();
-          action.timeScale = 0.5;
-        }); 7
+
+        console.log(clips)
+        // clips.forEach(function (clip) {
+        //   const action = mixer.clipAction(clip);
+        //   action.play();
+        //   action.timeScale = 0.5;
+        // }); 
+
+        const clip = THREE.AnimationClip.findByName(clips,'ArmatureAction.001')
+        const action = mixer.clipAction(clip)
+        action.play();
+        action.timeScale = 0.5;
 
         this.mixer = mixer;
-        this.#ducktor.playAnimationDefault(this.duck);
+        this.#ducktor.playAnimationDefault(this.duck,clips,mixer)
         this.#scene.add(this.duck)
+        console.log(this.#scene)
       });
   }
   loadElementsRewards(data) {
@@ -785,7 +810,7 @@ export class AppController {
           menograma.style.opacity = 0;
           setTimeout(() => {
             menograma.remove();
-            // this.cameraAnimation.playAnimationDefault();
+            this.cameraAnimation.playAnimationDefault();
           }, 500);
 
           menu.style.display = "flex";
