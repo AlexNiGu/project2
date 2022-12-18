@@ -154,6 +154,8 @@ export class AppController {
               /**LISTENER PARA SUBIR EL DIBUJO */
               document.getElementById('save-panting').addEventListener('click', async () => {
 
+                document.querySelector('.parrafo3').style.display='flex'
+                // this.drawLogic("draw", this.duck);
                 /** preparamos la imagen en binario*/
                 const img = new Image(1000, 1000);
                 const canvasIMG = canvas.toDataURL('image/png', 1.0);
@@ -538,6 +540,7 @@ export class AppController {
 
               var node = document.querySelector('.popup')
               node.parentElement.removeChild(node)
+              document.querySelector('.overlay').style.display = 'none'
               this.listenerShopMenu()
               // this.logicShop(url)
 
@@ -620,8 +623,8 @@ export class AppController {
         const canvasOffsetX = canvas.offsetLeft;
         const canvasOffsetY = canvas.offsetTop;
 
-        canvas.width = window.innerWidth - canvasOffsetX;
-        canvas.height = window.innerHeight - canvasOffsetY;
+        canvas.width = 1251;
+        canvas.height = window.innerHeight - canvasOffsetY - 200;
 
         let paint = false;
         let lineWidth = 5;
@@ -651,7 +654,7 @@ export class AppController {
         canvas.addEventListener("mousedown", (e) => {
           paint = false;
           ctx.beginPath();
-          ctx.moveTo(e.clientX, e.clientY);
+          ctx.moveTo(e.offsetX, e.offsetY);
         });
 
         canvas.addEventListener("mouseup", () => {
@@ -664,7 +667,7 @@ export class AppController {
             ctx.lineWidth = `${line.value}`;
             ctx.strokeStyle = `${color.value}`;
 
-            ctx.lineTo(e.clientX - canvasOffsetX, e.clientY);
+            ctx.lineTo(e.offsetX , e.offsetY);
             ctx.stroke();
           }
         });

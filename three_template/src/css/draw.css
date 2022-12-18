@@ -82,3 +82,31 @@ label {
     animation: headShake;
     animation-duration: 2s;
 }
+
+.parrafo3 {
+    top: 45%;
+    left: 45%;
+    position: absolute;
+    background: linear-gradient(180deg, #FFFFFF 0%, #E0F1FF 100%);
+    border-radius: 34px;
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 138.5%;
+    /* or 33px */
+display: none;
+    /* display: flex;
+    align-items: center;
+    text-align: center; */
+    letter-spacing: 0.025em;
+    border:0;
+    border-bottom: 8px solid #79A5C7!important;
+    width: 200px;
+    height: 200px;
+    /* display: flex; */
+    align-items:center;
+    justify-content: center;
+    color: #2FABF7;
+
+}

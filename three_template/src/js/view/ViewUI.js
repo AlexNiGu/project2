@@ -26,6 +26,7 @@ export class ViewUI {
       case "draw":
         myView = `
         <div class="draw">
+        <div class="parrafo3">Has Acabado!</div>
         <header class="flex shop-header">
             <h1>Dibujo!</h1>
             <div>
