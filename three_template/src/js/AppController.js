@@ -1,5 +1,5 @@
 import { Enviorment } from "./modules/Enviorment.js";
-// import  *  as keyControls from "./modules/KeyControls.js";
+import  *  as keyControls from "./modules/KeyControl.js";
 import { ViewUI } from "./view/ViewUI.js";
 import { Ducktor } from "./view/3dModel/Ducktor.js";
 import { Cursor } from "./modules/Cursor.js";
@@ -43,6 +43,7 @@ export class AppController {
   fetch;
 
   constructor() {
+    
     // this.cursor = new Cursor();
     this.#myEnviorment = new Enviorment();
     this.#ducktor = new Ducktor();
@@ -63,16 +64,17 @@ export class AppController {
     this.indexNumber = ''
     this.arrayRewards = []
 
+    // this.listenersClicks()
     JSON.parse(localStorage.getItem('rewards')) != null ? this.arrayRewards = JSON.parse(localStorage.getItem('rewards')) : ''
 
     console.log(this.arrayRewards)
     this.clock = new THREE.Clock();
 
+    // this.listenersClicks()
     
     this.loadElementsHouse(this.#myEnviorment.getHouse());
     this.loadElementsDucktor(this.#ducktor.getDucktor(), 26, 1.5, -1);
     this.loadElementsRewards(this.arrayRewards)
-
 
     this.user = JSON.parse(localStorage.getItem('user'))
 
@@ -83,6 +85,16 @@ export class AppController {
     console.log("dsadasdasdasdasd", this.#scene.children);
   }
 
+  listenersClicks(){
+    var i = 0
+    document.body.addEventListener('click',(e)=>{
+      if(e.clientX >= 755 && e.clientX<=845 && e.clientY >= 450 && e.clientY <= 590){
+        console.log(i++)
+          this.audio.playQuack()
+      }
+      
+  })
+  }
 
   draw() {
     this.#render.render(this.#scene, this.#camera); // three
@@ -90,9 +102,12 @@ export class AppController {
   }
 
   update() {
+    
+
     // keyControls.resetHover(this.#scene);
     // keyControls.hoverPiece(this.#scene, this.#camera);
     // this.#myKeyControls.hoverPiece();
+      // keyControls.Click(this.#camera,this.#scene)
     // this.#controls.update();
 
     // This is for the animations of the character
@@ -105,6 +120,9 @@ export class AppController {
   }
 
   listener() {
+    
+    // window.addEventListener('click',()=>{keyControls.Click(this.#camera,this.#scene,true)});
+    // window.addEventListener('mouseup', window.removeEventListener('mousedown',keyControls.Click(this.#camera,this.#scene)) );
     document.getElementById("game").addEventListener("click", () => {
       this.audio.stopMusic()
       this.sectionUI = "gameUI";
@@ -142,6 +160,7 @@ export class AppController {
             // this.#ducktor.playAnimationDraw(this.duck);
             this.cameraAnimation.playAnimationDraw();
             this.audio.playClickMusic()
+            this.audio.playDrawMusic()
 
             setTimeout(async () => {
               this.view = this.#viewUI.render("draw");
@@ -205,6 +224,7 @@ export class AppController {
             break;
           case "conversationUI":
             this.audio.playClickMusic()
+            this.audio.playConversationMusic()
             var cuerpo = {
               IdUser: this.fetch.user.IdUser,
               IdTest: "this.fetch.test.IdTest",
@@ -235,19 +255,22 @@ export class AppController {
                 this.#viewUI.render("conversation");
                 var i = 0
                 this.drawLogic("conversation", "", this.fetch.test[i], false)
-
+                this.listenerCLoseConversation()
                 document.querySelector(".answer").addEventListener('click', async (e) => {
                   i++
                   console.log(i)
-                  if (i <= 5) {
-                    // console.log(i)
+                  if (i <= 4) {
+                    var audio = new Audios().playSubClick()
                     cuerpo[`Respuesta${i}`] = parseInt(e.target.dataset.indexNumber)
                     this.drawLogic("conversation", "", this.fetch.test[i], false)
                   }
                   if (i == 5) {
 
+                    cuerpo[`Respuesta${i}`] = parseInt(e.target.dataset.indexNumber)
+                    this.drawLogic("conversation", "", this.fetch.test[i], true)
                     await this.fetch.responseConversation(cuerpo)
-
+                    
+                    
                     var cuerpoCoins = {
                       IdUser: this.user.IdUser,
                       Coins: this.user.Coins + 300
@@ -326,8 +349,8 @@ export class AppController {
     });
 
     this.buttonConversation.addEventListener("click", this.activeDrawUI());
-    window.addEventListener('mousemove', keyControls.onMouseMove, false);
-    window.addEventListener('click', keyControls.onClick(this.#camera, this.#scene ));
+    
+    // window.addEventListener('click', keyControls.onClick(this.#camera, this.#scene ));
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -391,7 +414,18 @@ export class AppController {
     this.loader.load(
       element,
       (glb) => {
-        this.duck = glb.scene
+        
+        glb.scenes.forEach((scene) => {
+          this.duck = scene
+          scene.traverse((node) => {
+            if (node.isMesh) {
+              node.addEventListener('click', () => {
+                console.log('mesh clicked!');
+              });
+            }
+          });
+        });
+        
         this.duck.position.set(20, 0.35, -2);
         this.duck.rotation.set(0, 1.8, 0);
 
@@ -504,6 +538,9 @@ export class AppController {
       this.fetch.shopFornitures[this.indexNumber].RotationY,
       urlIntegrado
     )
+
+    document.querySelector(".close").click()
+    /**CERRAR LA SHOP Y ACERCAR LA CÁMARA DONDE SE HAYA PUESTO EL OBJETO */
   }
 
   /**LISTENERS PARA LA TIENDA---------------------------------------------------------------- */
@@ -518,6 +555,8 @@ export class AppController {
         this.indexNumber = parseInt(e.target.dataset.indexNumber)
 
         if (this.fetch.shopFornitures[this.indexNumber].Price <= parseInt(this.user.Coins)) {
+
+          let audioGood = new Audios().playClickMusic() 
 
           if (this.fetch.shopFornitures[this.indexNumber].Name == 'Cuadro') {
 
@@ -540,8 +579,10 @@ export class AppController {
 
               var node = document.querySelector('.popup')
               node.parentElement.removeChild(node)
-              document.querySelector('.overlay').style.display = 'none'
+              let overlay = document.querySelector('.overlay')
+              overlay.parentElement.removeChild(overlay)
               this.listenerShopMenu()
+              this.listenerElementsShop()
               // this.logicShop(url)
 
             })
@@ -603,13 +644,18 @@ export class AppController {
           draw.style.opacity = 1;
         }, 500);
         document.querySelector(".close").addEventListener("click", () => {
+          this.audio.stopMusic()
           console.log('yep')
           draw.style.opacity = 0;
-          setTimeout(() => {
-            draw.remove();
-
-            this.cameraAnimation.playAnimationDefault();
-          }, 500);
+         
+            setTimeout(() => {
+              this.audio.playAmbientMusic()
+              draw.remove();
+  
+              this.cameraAnimation.playAnimationDefault();
+            }, 500);
+      
+          
 
           menu.style.display = "flex";
           menu.style.opacity = 1;
@@ -798,22 +844,7 @@ export class AppController {
         break;
       case 'conversation':
 
-        var menograma = document.querySelector(".conversation");
-        var menu = document.querySelector(".menu");
-        setTimeout(() => {
-          menograma.style.opacity = 1;
-        }, 500);
-        document.querySelector(".close").addEventListener("click", () => {
-          menograma.style.opacity = 0;
-          setTimeout(() => {
-            menograma.remove();
-            this.cameraAnimation.playAnimationDefault();
-          }, 500);
-
-          menu.style.display = "flex";
-          menu.style.opacity = 1;
-        });
-
+        
         if (!bol) {
           // console.log(data)
           document.querySelector('.text-question').innerHTML = data.pregunta;
@@ -834,6 +865,10 @@ export class AppController {
 
           bol = true;
 
+        }else{
+          document.querySelector('.text-question').innerHTML = 'HAS ACABADO POR HOY!!!'
+          document.querySelector('.answer').innerHTML = ''
+          document.querySelector('.answer').innerHTML = 'TU RECOMEPNSA ES DE 300 PECES!'
         }
 
     }
@@ -882,6 +917,32 @@ export class AppController {
     })
   }
 
+  listenerCLoseConversation(){
+    document.querySelector(".close").addEventListener("click", () => {
+         
+      var menograma = document.querySelector(".conversation");
+        var menu = document.querySelector(".menu");
+     
+      console.log('ara si')
+    this.audio.stopMusic()
+    menograma.style.opacity = 0;
+
+    
+      setTimeout(() => {
+        this.audio.playAmbientMusic()
+        menograma.remove();
+        this.cameraAnimation.playAnimationDefault();
+      }, 500);
+    
+      setTimeout(() => {
+        menograma.style.opacity = 1;
+      }, 500);
+    
+
+    menu.style.display = "flex";
+    menu.style.opacity = 1;
+  });
+  }
 }
 
 

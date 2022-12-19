@@ -143,3 +143,63 @@ body {
     top: -490px;
     left: 1200px;
 }
+
+#container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* ----------- */
+    top:50%;
+    left:50%;
+    position: absolute;
+    transform: translate(-50%,-50%);
+
+    /* ----------- */
+
+    flex-direction: column;
+    gap: 1em;
+    padding: 2em;
+    border-bottom: 5px solid #59BCAA;
+    border-radius: 34px;
+    background-color: #59BCAA;
+    border: 1px solid #59BCAA;
+}
+
+#container::before {
+    content: "BIENBENIDO!";
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 138.5%;
+    background-color: var(--bg-color);
+    letter-spacing: 0.025em;
+    padding: 0.5em;
+    border-radius: 25px;
+    /* border-bottom: 2px solid #79A5C7; */
+}
+.user-label {
+    background-color: var(--bg-color);
+    letter-spacing: 0.025em;
+    padding: 0.5em;
+    border-radius: 10px;
+
+}
+
+#button-login {
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    color: #2FABF7;
+    background: linear-gradient(180deg, #FFFFFF 0%, #E0F1FF 100%);
+    border-radius: 34px;
+    font-family: 'Fredoka';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 138.5%;
+    border: none;
+    padding: .25em 1em .25em 1em;
+    margin-top: 1em;
+}

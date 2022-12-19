@@ -26,9 +26,9 @@ export function hoverPiece(pScene, pCamera) {
         // // console.log(this.mouse, this.camera);
         // intersect[i].object.material.color.set(0x00ff00);
         intersect[i].object.material.opacity = 0.1;
-        // // console.log("Hover");
+         console.log("Hover");
 
-
+        console.log(intersect[i])
     }
     // // console.log(intersect);
     // // console.log(pScene);
@@ -47,19 +47,26 @@ export function resetHover(pScene) {
 
 //////////////////////////////////////////////////////////////////////////
 
-export function onClick(pCamera, pScene) {
-    raycaster.setFromCamera(mouse, pCamera);
-    var intersect = raycaster.intersectObjects(pScene.children);
+export function Click(pCamera, pScene) {
+  
+    //     raycaster.setFromCamera(mouse, pCamera);
+    //     var intersect = raycaster.intersectObjects(pScene.children,true);
+    
+    //     if (intersect.length > 0) {
+    //         // console.log(intersect[0])
+    
+    //     }
+        
+    
+    
 
-    if (intersect > 0) {
-
-    }
-
-    for (let i = 0; i < intersect.length; i++) {
-        intersect[i].object.material.color.set(0x00ff00);
-        // intersect[i].object.rotation.x -= 3;
-    }
-    // // console.log("Click");
+    // for (let i = 0; i < intersect.length; i++) {
+    //     intersect[i].object.material.color.set(0x00ff00);
+    //     // intersect[i].object.rotation.x -= 3;
+    //     console.log("Click");
+    // }
+   
+    console.log('click')
 
 }
 

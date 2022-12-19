@@ -2,9 +2,16 @@ import { AppController } from './AppController.js';
 import { Cursor } from './modules/Cursor.js';
 import { ChargingPage } from './view/charging.js';
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { Audios } from './modules/Audio.js';
 // import Shop from '../shop/shop.js';
+var audios = new Audios()
+document.body.addEventListener('click',(e)=>{
+    if(e.clientX >= 755 && e.clientX<=845 && e.clientY >= 450 && e.clientY <= 590){
 
-
+        audios.playQuack()
+    }
+    
+})
 var myAppControl = {}
 new Cursor()
 
@@ -19,6 +26,7 @@ localStorage.getItem('token') == 'yes'? renderCanvas(): startLogin()
 
 function startLogin() {
 
+    audios.playLoginMusic()
     const buttonLogin = document.getElementById('button-login')
 
     buttonLogin.addEventListener('click', async () => {
@@ -57,6 +65,7 @@ function startLogin() {
     function saveData(response) {
         localStorage.setItem('token', 'yes')
         localStorage.setItem('user', JSON.stringify(response))
+        audios.stopMusic()
         renderCanvas()
     }
 
@@ -88,6 +97,7 @@ async function renderCanvas(){
     var uiRoot = document.getElementById('root-ui');
     uiRoot.innerHTML += charging.renderPage()
     myAppControl = new AppController(uiRoot);
+    
     animate()
 }
 
